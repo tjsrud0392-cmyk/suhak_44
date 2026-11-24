@@ -1,0 +1,2592 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>미래 사상구 만들기</title>
+<style>
+:root{--ink:#243b53;--line:#d9e2ec;--radius:14px;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;font-family:"Pretendard","Apple SD Gothic Neo","맑은 고딕",Malgun Gothic,sans-serif;color:var(--ink);background:#eef6fb;overflow:hidden;}
+#app{height:100%;}
+.screen{display:none;height:100%;}
+.screen.active{display:block;}
+.hidden{display:none !important;}
+button{font-family:inherit;}
+.btn{border:none;border-radius:12px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:var(--ink);box-shadow:0 3px 0 #c9d6e2;transition:transform .06s,box-shadow .06s;}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c9d6e2;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn-green{background:#5fd068;color:#fff;box-shadow:0 3px 0 #3da845;}
+.btn-blue{background:#4e9bf5;color:#fff;box-shadow:0 3px 0 #2f78cc;}
+.btn-pink{background:#ff7aa2;color:#fff;box-shadow:0 3px 0 #e05581;}
+.btn-yellow{background:#ffd166;color:#6b4b00;box-shadow:0 3px 0 #e0ab2e;}
+.btn-gray{background:#e3e9ef;color:#4a5b6d;box-shadow:0 3px 0 #c3ccd6;}
+.btn-red{background:#ff6b6b;color:#fff;box-shadow:0 3px 0 #d94a4a;}
+.btn-ghost{background:rgba(255,255,255,.75);color:#44586c;box-shadow:0 2px 0 #cbd6e0;}
+.btn-sm{padding:7px 11px;font-size:13px;border-radius:10px;}
+.btn-huge{padding:16px 30px;font-size:22px;border-radius:18px;margin-top:6px;}
+.btn-wide{display:block;width:100%;margin:6px 0;}
+.btn-bb{padding:9px 12px;font-size:13px;}
+#apiwarn{position:fixed;left:0;right:0;top:0;z-index:95;background:#ffe08a;color:#6b4b00;font-size:13px;font-weight:800;padding:8px 14px;text-align:center;}
+#screen-start{position:relative;background:linear-gradient(#aee4ff 0%,#dff4ff 55%,#9fdc86 55%,#7bc36a 100%);overflow:auto;}
+.start-sky{position:absolute;inset:0;overflow:hidden;}
+.cloud{position:absolute;width:160px;height:52px;background:#fff;border-radius:40px;opacity:.85;}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%;}
+.cloud:before{width:70px;height:70px;top:-28px;left:22px;}
+.cloud:after{width:52px;height:52px;top:-20px;right:26px;}
+.c1{top:8%;left:6%;}.c2{top:20%;right:10%;transform:scale(.8);}.c3{top:36%;left:28%;transform:scale(.6);}
+.start-card{position:relative;z-index:2;max-width:620px;margin:3vh auto;background:rgba(255,255,255,.95);border-radius:26px;padding:26px 30px 30px;box-shadow:0 14px 34px rgba(30,60,90,.22);text-align:center;}
+.logo-big{font-size:34px;font-weight:900;color:#1d6fd0;letter-spacing:-1px;}
+.start-l1{font-size:21px;font-weight:800;margin:14px 0 4px;color:#ef7d2d;}
+.start-l2,.start-l3{font-size:16px;margin:2px 0;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;text-align:left;margin:16px 0 6px;}
+.form-grid label{font-size:13px;font-weight:700;color:#486581;display:block;}
+.form-grid input,.form-grid select{width:100%;margin-top:4px;padding:10px;border:2px solid var(--line);border-radius:10px;font-size:15px;background:#fff;}
+.form-grid input:focus,.form-grid select:focus{outline:none;border-color:#4e9bf5;}
+.tiny-note{font-size:11.5px;color:#7b8fa3;margin:6px 0 2px;}
+.btn-teacher-top{position:absolute;top:14px;right:16px;}
+.restore-box{margin-top:12px;background:#fff7e0;border:2px dashed #ffd166;border-radius:12px;padding:10px;font-size:13px;}
+.restore-box span{display:block;margin-bottom:6px;font-weight:700;color:#8a6200;}
+#screen-main{display:none;flex-direction:column;height:100%;}
+#screen-main.active{display:flex;}
+#topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:linear-gradient(#fff,#eef4fa);border-bottom:3px solid #dbe6f0;flex:0 0 auto;flex-wrap:wrap;}
+.logo-sm{font-size:17px;font-weight:900;color:#1d6fd0;}
+.steps{display:flex;gap:6px;}
+.step-pill{font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:20px;background:#e8eff6;color:#8aa0b4;}
+.step-pill.on{background:#ffd166;color:#6b4b00;}
+.step-pill.done{background:#cdf3d0;color:#2f7d3b;}
+.tb-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.who{font-size:13px;font-weight:800;color:#486581;background:#fff;border:2px solid var(--line);padding:5px 10px;border-radius:20px;}
+#stage{flex:1 1 auto;display:flex;min-height:0;}
+#mapwrap{flex:1 1 auto;position:relative;min-width:0;background:#bfe6ff;}
+#map3d{position:absolute;inset:0;}
+#map-done,#map-teacher{position:relative;width:100%;height:100%;}
+.renderer-badge{position:absolute;left:10px;bottom:10px;font-size:11px;color:#2d4a63;background:rgba(255,255,255,.75);padding:3px 8px;border-radius:10px;}
+.maphint{position:absolute;left:50%;transform:translateX(-50%);top:10px;font-size:13px;font-weight:700;background:rgba(255,255,255,.92);padding:7px 14px;border-radius:20px;color:#375b7d;box-shadow:0 3px 10px rgba(0,0,0,.1);pointer-events:none;max-width:88%;text-align:center;}
+#camtools{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:5px;}
+.cbtn{width:36px;height:36px;border:none;border-radius:10px;background:rgba(255,255,255,.92);font-size:17px;font-weight:800;color:#3b5c7a;cursor:pointer;box-shadow:0 2px 0 #c3d0dc;}
+.cbtn:active{transform:translateY(2px);box-shadow:none;}
+.overlay-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,94%);background:rgba(255,255,255,.97);border-radius:20px;padding:20px 24px;box-shadow:0 16px 40px rgba(20,50,80,.3);max-height:92%;overflow:auto;}
+.overlay-card h2{margin:0 0 6px;font-size:22px;color:#1d6fd0;}
+.overlay-card .sub{font-size:13.5px;color:#5a7488;margin:0 0 12px;}
+.s1table{width:100%;border-collapse:collapse;font-size:14px;}
+.s1table th,.s1table td{border:1px solid var(--line);padding:7px 8px;text-align:center;}
+.s1table thead th{background:#eef4fa;font-size:13px;}
+.s1table tfoot th{background:#f7fafc;}
+.s1table input{width:100%;max-width:150px;padding:7px;border:2px solid var(--line);border-radius:8px;text-align:right;font-size:15px;font-weight:700;}
+.s1table input:focus{outline:none;border-color:#4e9bf5;}
+.zchip{display:inline-flex;align-items:center;gap:6px;font-weight:800;}
+.zdot{width:14px;height:14px;border-radius:4px;display:inline-block;}
+.s1ratio{margin:10px 0;font-size:15px;font-weight:800;text-align:center;color:#375b7d;}
+.s1msg{min-height:44px;font-size:13.5px;font-weight:700;line-height:1.5;padding:8px 10px;border-radius:10px;}
+.s1msg.bad{background:#fff1f1;color:#c23b3b;border:2px dashed #ffb4b4;}
+.s1msg.good{background:#eefbf0;color:#2f7d3b;border:2px dashed #9fe0a8;}
+.s1btns{display:flex;gap:8px;justify-content:center;margin-top:10px;}
+#side{flex:0 0 330px;background:#f7fbff;border-left:3px solid #dbe6f0;overflow-y:auto;padding:10px 12px 20px;}
+.ph{font-size:14px;margin:12px 0 7px;color:#32526e;border-left:5px solid #ffd166;padding-left:7px;}
+.pdesc{font-size:12.5px;color:#6b8299;margin:0 0 8px;line-height:1.45;}
+.zonebtns{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.zbtn{border:3px solid transparent;border-radius:12px;padding:10px 6px;font-weight:800;font-size:13.5px;cursor:pointer;color:#fff;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.15);}
+.zbtn.sel{border-color:#243b53;transform:translateY(1px);}
+.zbtn small{display:block;font-size:11px;font-weight:700;opacity:.95;margin-top:2px;}
+.statrow{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 10px;margin-bottom:7px;}
+.statrow .srhead{display:flex;justify-content:space-between;font-size:13px;font-weight:800;}
+.bar{height:10px;background:#eef2f6;border-radius:6px;margin-top:6px;overflow:hidden;}
+.bar>i{display:block;height:100%;border-radius:6px;}
+.srsub{font-size:11.5px;color:#7b8fa3;margin-top:4px;}
+.srow-full{border-color:#5fd068;background:#f3fff4;}
+.pmsg{font-size:13px;font-weight:700;min-height:36px;padding:6px 8px;border-radius:10px;}
+.pmsg.bad{background:#fff1f1;color:#c23b3b;}
+.pmsg.good{background:#eefbf0;color:#2f7d3b;}
+.side-tabs{display:flex;gap:6px;margin-bottom:8px;}
+.stab{flex:1;border:none;border-radius:10px;padding:8px;font-size:12.5px;font-weight:800;background:#e8eff6;color:#7b8fa3;cursor:pointer;}
+.stab.active{background:#ffd166;color:#6b4b00;}
+.zgroup{margin:10px 0 4px;font-size:12.5px;font-weight:900;padding:5px 8px;border-radius:8px;color:#fff;}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.bcard{background:#fff;border:3px solid var(--line);border-radius:12px;padding:6px;cursor:pointer;text-align:center;transition:transform .08s;}
+.bcard:hover{transform:translateY(-2px);}
+.bcard.sel{border-color:#ffb703;background:#fffaf0;}
+.bcard.off{opacity:.42;cursor:not-allowed;}
+.bcard canvas{width:100%;height:62px;display:block;}
+.bcard .bn{font-size:12.5px;font-weight:800;margin-top:2px;}
+.bcard .ba{font-size:11px;color:#7b8fa3;}
+.selinfo{background:#fffaf0;border:2px dashed #ffd166;border-radius:12px;padding:9px;font-size:13px;font-weight:700;color:#6b4b00;margin-bottom:8px;min-height:44px;}
+.inventory{display:flex;flex-wrap:wrap;gap:5px;}
+.invchip{background:#fff;border:2px solid var(--line);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:800;}
+#bottombar{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 12px;background:linear-gradient(#eef4fa,#fff);border-top:3px solid #dbe6f0;flex-wrap:wrap;}
+.bb-sep{width:1px;height:24px;background:#dbe6f0;margin:0 4px;}
+#screen-done{display:none;flex-direction:column;height:100%;background:#eef6fb;}
+#screen-done.active{display:flex;}
+#topbar2,#topbar3{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:#fff;border-bottom:3px solid #dbe6f0;flex:0 0 auto;gap:8px;flex-wrap:wrap;}
+.done-wrap{flex:1 1 auto;display:flex;min-height:0;}
+.done-left{flex:1 1 auto;position:relative;background:#bfe6ff;min-width:0;}
+.done-right{flex:0 0 400px;background:#fff;border-left:3px solid #dbe6f0;overflow-y:auto;padding:16px 18px 30px;}
+.done-right h1{margin:0;font-size:26px;color:#1d6fd0;}
+.done-who{font-size:13px;color:#7b8fa3;margin:4px 0 10px;font-weight:700;}
+.done-ratio{font-size:18px;font-weight:900;text-align:center;background:#f3f8fd;border-radius:12px;padding:10px;}
+.done-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px;}
+.done-table td,.done-table th{border:1px solid var(--line);padding:6px 8px;}
+.done-table th{background:#eef4fa;}
+.done-table td.num{text-align:right;font-variant-numeric:tabular-nums;}
+.done-reflect{font-size:13.5px;line-height:1.6;}
+.done-reflect b{color:#1d6fd0;}
+.done-reflect p{margin:4px 0 10px;white-space:pre-wrap;}
+#screen-teacher{display:none;flex-direction:column;height:100%;background:#eef6fb;}
+#screen-teacher.active{display:flex;}
+.t-wrap{flex:1 1 auto;display:flex;min-height:0;}
+.t-left{flex:1 1 auto;overflow-y:auto;padding:12px 14px;min-width:0;}
+.t-right{flex:0 0 480px;border-left:3px solid #dbe6f0;background:#fff;display:flex;flex-direction:column;min-width:0;}
+.t-vhead{padding:10px 14px;font-weight:800;font-size:14px;color:#32526e;border-bottom:2px solid var(--line);}
+#map-teacher{flex:0 0 320px;background:#bfe6ff;position:relative;}
+.t-vcam{display:flex;gap:5px;padding:7px 10px;border-bottom:2px solid var(--line);align-items:center;}
+.readonly-tag{margin-left:auto;font-size:11.5px;font-weight:800;color:#8a6200;background:#fff3cd;padding:4px 9px;border-radius:10px;}
+.t-detail{flex:1 1 auto;overflow-y:auto;padding:12px 14px;font-size:13px;line-height:1.55;}
+.t-table{width:100%;border-collapse:collapse;background:#fff;font-size:13.5px;}
+.t-table th,.t-table td{border:1px solid var(--line);padding:7px 8px;text-align:center;}
+.t-table thead th{background:#eef4fa;position:sticky;top:0;}
+.t-table tr.sel td{background:#fffaf0;}
+.t-summary{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.tcard{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 14px;min-width:120px;}
+.tcard b{display:block;font-size:22px;color:#1d6fd0;}
+.tcard span{font-size:12px;color:#7b8fa3;font-weight:700;}
+.t-msg{font-size:13px;font-weight:700;color:#c23b3b;margin-top:8px;}
+.t-session{font-size:12px;color:#7b8fa3;font-weight:700;}
+.badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11.5px;font-weight:800;}
+.badge-ok{background:#cdf3d0;color:#2f7d3b;}
+.badge-no{background:#f1f3f5;color:#8c99a6;}
+.t-detail table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:12.5px;}
+.t-detail td,.t-detail th{border:1px solid var(--line);padding:5px 7px;}
+.t-detail th{background:#f5f9fc;}
+.modal-back{position:fixed;inset:0;background:rgba(20,40,60,.5);z-index:50;display:flex;align-items:center;justify-content:center;}
+.modal{background:#fff;border-radius:20px;padding:22px 24px;width:min(460px,92%);box-shadow:0 18px 50px rgba(0,0,0,.3);max-height:92vh;overflow:auto;}
+.modal-wide{width:min(680px,94%);}
+.modal h2{margin:0 0 8px;font-size:21px;color:#1d6fd0;}
+.modal p{font-size:14px;margin:4px 0 10px;}
+.modal label{display:block;font-size:13px;font-weight:800;color:#486581;margin:10px 0 0;}
+.modal input,.modal select,.modal textarea{width:100%;margin-top:4px;padding:9px;border:2px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;}
+.modal input:focus,.modal textarea:focus,.modal select:focus{outline:none;border-color:#4e9bf5;}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap;}
+.modal-msg{font-size:13px;font-weight:700;min-height:20px;margin-top:8px;color:#c23b3b;}
+.modal-msg.good{color:#2f7d3b;}
+.rf-auto{background:#f3f8fd;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.6;}
+.img-body img{width:100%;border-radius:12px;border:2px solid var(--line);}
+.toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,20px);background:#243b53;color:#fff;padding:11px 20px;border-radius:24px;font-size:14px;font-weight:800;opacity:0;pointer-events:none;transition:.22s;z-index:80;max-width:86%;text-align:center;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+.toast.bad{background:#d64545;}.toast.good{background:#2f7d3b;}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.72);z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-weight:800;color:#375b7d;}
+.spin{width:44px;height:44px;border:5px solid #d9e2ec;border-top-color:#4e9bf5;border-radius:50%;animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+@media (max-width:1180px){#side{flex-basis:290px;}.done-right,.t-right{flex-basis:340px;}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="apiwarn" class="hidden"></div>
+
+  <!-- ===== 시작 ===== -->
+  <section id="screen-start" class="screen active">
+    <div class="start-sky"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
+    <div class="start-card">
+      <div class="logo-big">🏙️ 미래 사상구 만들기</div>
+      <p class="start-l1">환영합니다, 도시 설계가 여러분!</p>
+      <p class="start-l2">100,000㎡의 땅에 나만의 미래 사상구를 만들어 보세요!</p>
+      <p class="start-l3">땅을 비례배분하고 건물을 세워 멋진 마을을 완성해 봅시다!</p>
+      <div class="form-grid">
+        <label>학급<select id="in-class"></select></label>
+        <label>학생 번호<select id="in-no"></select></label>
+        <label>별명(또는 이름)<input id="in-nick" type="text" maxlength="20" placeholder="예: 사상이"></label>
+        <label>우리 마을 이름<input id="in-village" type="text" maxlength="30" placeholder="예: 행복한 사상마을"></label>
+      </div>
+      <p class="tiny-note">※ 번호와 별명만 사용합니다. 다른 개인정보는 모으지 않아요.</p>
+      <button id="btn-start" class="btn btn-huge btn-green">🚜 마을 만들기 시작!</button>
+      <div id="restore-box" class="restore-box hidden">
+        <span id="restore-text"></span>
+        <button id="btn-restore" class="btn btn-sm btn-blue">이어서 하기</button>
+        <button id="btn-fresh" class="btn btn-sm btn-gray">새로 시작</button>
+      </div>
+      <button id="btn-teacher-open" class="btn btn-ghost btn-teacher-top">🔑 교사 관리실</button>
+    </div>
+  </section>
+
+  <!-- ===== 메인 ===== -->
+  <section id="screen-main" class="screen">
+    <header id="topbar">
+      <div class="tb-left"><span class="logo-sm">🏙️ 미래 사상구 만들기</span></div>
+      <div class="tb-mid"><div class="steps">
+        <span class="step-pill" data-step="1">① 비례배분</span>
+        <span class="step-pill" data-step="2">② 땅 색칠</span>
+        <span class="step-pill" data-step="3">③ 건물 건설</span>
+        <span class="step-pill" data-step="4">④ 마을 완성</span>
+      </div></div>
+      <div class="tb-right">
+        <span id="who" class="who"></span>
+        <button id="btn-save-top" class="btn btn-sm btn-yellow">💾 저장</button>
+        <button id="btn-submit-top" class="btn btn-sm btn-pink">📨 선생님에게 보내기</button>
+        <button id="btn-teacher-open2" class="btn btn-sm btn-ghost">🔑 교사 관리실</button>
+      </div>
+    </header>
+    <div id="stage">
+      <div id="mapwrap">
+        <div id="map3d"></div>
+        <div id="renderer-badge" class="renderer-badge"></div>
+        <div id="maphint" class="maphint"></div>
+        <div id="camtools">
+          <button class="cbtn" id="cam-rotl" title="왼쪽으로 돌리기">⟲</button>
+          <button class="cbtn" id="cam-rotr" title="오른쪽으로 돌리기">⟳</button>
+          <button class="cbtn" id="cam-in" title="확대">＋</button>
+          <button class="cbtn" id="cam-out" title="축소">－</button>
+          <button class="cbtn" id="cam-fit" title="전체 보기">⤢</button>
+          <button class="cbtn" id="cam-reset" title="카메라 초기화">⟱</button>
+        </div>
+        <div id="step1card" class="overlay-card hidden">
+          <h2>① 비례배분 결과를 입력해요</h2>
+          <p class="sub">전체 부지는 <b>100,000㎡</b>입니다. 활동지에서 계산한 비와 면적을 적어 보세요.<br>(한 칸 = 1,000㎡ / 네 비의 합은 10이에요)</p>
+          <table class="s1table">
+            <thead><tr><th>시설</th><th>비</th><th>비례배분한 면적(㎡)</th></tr></thead>
+            <tbody id="s1body"></tbody>
+            <tfoot><tr><th>합계</th><th id="s1rsum">0</th><th id="s1asum">0</th></tr></tfoot>
+          </table>
+          <div class="s1ratio">상업 : 주거 : 근린 : 교육 = <b id="s1ratiotext">? : ? : ? : ?</b></div>
+          <div id="s1msg" class="s1msg"></div>
+          <div class="s1btns">
+            <button id="btn-check1" class="btn btn-blue">🔍 계산 확인</button>
+            <button id="btn-go2" class="btn btn-green" disabled>🧱 마을 부지 만들기</button>
+          </div>
+        </div>
+      </div>
+      <aside id="side">
+        <div id="panel-paint" class="panel hidden">
+          <h3 class="ph">🎨 땅 색칠 도구</h3>
+          <p class="pdesc">색을 고르고 땅을 <b>클릭</b>하거나 <b>드래그</b>해서 칠해요.</p>
+          <div id="zonebtns" class="zonebtns"></div>
+          <button id="btn-eraser" class="btn btn-wide btn-gray">🧽 지우개</button>
+          <h3 class="ph">📏 색칠 현황</h3>
+          <div id="paintstats"></div>
+          <div id="paintmsg" class="pmsg"></div>
+          <button id="btn-paint-done" class="btn btn-wide btn-green">✅ 색칠 완료</button>
+          <button id="btn-paint-clear" class="btn btn-wide btn-gray">전체 지우기</button>
+        </div>
+        <div id="panel-build" class="panel hidden">
+          <div class="side-tabs">
+            <button class="stab active" data-tab="list">🏗️ 건물 목록</button>
+            <button class="stab" data-tab="status">📊 건설 현황</button>
+          </div>
+          <div id="tab-list">
+            <div id="selinfo" class="selinfo">건물을 골라 주세요.</div>
+            <div id="buildlist"></div>
+          </div>
+          <div id="tab-status" class="hidden">
+            <div id="buildstats"></div>
+            <h3 class="ph">🏠 지은 건물</h3>
+            <div id="inventory" class="inventory"></div>
+          </div>
+          <button id="btn-back2" class="btn btn-wide btn-gray">⬅ 땅 색칠로 돌아가기</button>
+          <button id="btn-finish" class="btn btn-wide btn-green">🎉 우리 마을 완성하기</button>
+        </div>
+      </aside>
+    </div>
+    <footer id="bottombar">
+      <button id="btn-undo" class="btn btn-bb">↩ 실행 취소</button>
+      <button id="btn-redo" class="btn btn-bb">↪ 다시 실행</button>
+      <span class="bb-sep"></span>
+      <button id="btn-rotate" class="btn btn-bb">🔄 회전 (R)</button>
+      <button id="btn-move" class="btn btn-bb">✋ 건물 이동</button>
+      <button id="btn-del" class="btn btn-bb btn-red">🗑 건물 삭제</button>
+      <span class="bb-sep"></span>
+      <button id="btn-camreset" class="btn btn-bb">🎥 카메라 초기화</button>
+      <button id="btn-save" class="btn btn-bb btn-yellow">💾 마을 저장</button>
+      <button id="btn-submit" class="btn btn-bb btn-pink">📨 선생님에게 보내기</button>
+    </footer>
+  </section>
+
+  <!-- ===== 완성 ===== -->
+  <section id="screen-done" class="screen">
+    <header id="topbar2">
+      <span class="logo-sm">🏙️ 우리 마을 설계도</span>
+      <div>
+        <button id="btn-done-back" class="btn btn-sm btn-gray">⬅ 마을로 돌아가기</button>
+        <button id="btn-shot" class="btn btn-sm btn-blue">🖼 조감도 이미지 저장</button>
+        <button id="btn-submit-done" class="btn btn-sm btn-pink">📨 선생님에게 보내기</button>
+      </div>
+    </header>
+    <div class="done-wrap">
+      <div class="done-left"><div id="map-done"></div></div>
+      <div class="done-right">
+        <h1 id="done-village">마을 이름</h1>
+        <div id="done-who" class="done-who"></div>
+        <h3 class="ph">📐 부지 배분</h3>
+        <div id="done-ratio" class="done-ratio"></div>
+        <table class="done-table" id="done-areas"></table>
+        <h3 class="ph">🏠 주요 건물</h3>
+        <div id="done-blds" class="inventory"></div>
+        <h3 class="ph">✍️ 설계 의도</h3>
+        <div id="done-reflect" class="done-reflect"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 교사 ===== -->
+  <section id="screen-teacher" class="screen">
+    <header id="topbar3">
+      <span class="logo-sm">🔑 교사 관리실 — 미래 사상구 만들기</span>
+      <div>
+        <span id="t-session" class="t-session"></span>
+        <button id="t-refresh" class="btn btn-sm btn-blue">🔄 새로 고침</button>
+        <button id="t-csv" class="btn btn-sm btn-yellow">📄 CSV 내보내기</button>
+        <button id="t-logout" class="btn btn-sm btn-gray">나가기</button>
+      </div>
+    </header>
+    <div class="t-wrap">
+      <div class="t-left">
+        <div id="t-summary" class="t-summary"></div>
+        <table class="t-table">
+          <thead><tr><th>번호</th><th>별명</th><th>마을 이름</th><th>비</th><th>건물</th><th>제출 시간</th><th>상태</th><th></th></tr></thead>
+          <tbody id="t-tbody"></tbody>
+        </table>
+        <div id="t-msg" class="t-msg"></div>
+      </div>
+      <div class="t-right">
+        <div id="t-vhead" class="t-vhead">학생 작품의 '마을 열기'를 누르면 여기에 나타납니다.</div>
+        <div id="map-teacher"></div>
+        <div class="t-vcam">
+          <button class="cbtn" id="tcam-rotl">⟲</button>
+          <button class="cbtn" id="tcam-rotr">⟳</button>
+          <button class="cbtn" id="tcam-in">＋</button>
+          <button class="cbtn" id="tcam-out">－</button>
+          <button class="cbtn" id="tcam-fit">⤢</button>
+          <span class="readonly-tag">읽기 전용</span>
+        </div>
+        <div id="t-detail" class="t-detail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 모달 ===== -->
+  <div id="modal-back" class="modal-back hidden">
+    <div id="modal-login" class="modal hidden">
+      <h2>🔑 교사 관리실</h2>
+      <p>선생님 비밀번호를 입력해 주세요.</p>
+      <input id="t-pw" type="password" maxlength="60" placeholder="비밀번호">
+      <div id="t-pwmsg" class="modal-msg"></div>
+      <div class="modal-btns">
+        <button id="t-login" class="btn btn-blue">들어가기</button>
+        <button class="btn btn-gray modal-close">닫기</button>
+      </div>
+    </div>
+    <div id="modal-reflect" class="modal modal-wide hidden">
+      <h2>✍️ 우리 마을 설계 이야기</h2>
+      <div class="rf-auto" id="rf-auto"></div>
+      <label>1. 우리 마을 이름<input id="rf-village" type="text" maxlength="30"></label>
+      <label>2. 가장 넓게 배분한 시설은 무엇인가요?<select id="rf-widest"></select></label>
+      <label>3. 그 시설을 가장 넓게 한 이유는 무엇인가요?<textarea id="rf-reason" maxlength="400" rows="2" placeholder="예: 우리 마을에 사는 사람이 많아서 집이 많이 필요하다고 생각했어요."></textarea></label>
+      <label>4. 우리 마을의 특징을 소개해 주세요.<textarea id="rf-feature" maxlength="400" rows="2" placeholder="예: 공원이 넓어서 산책하기 좋은 마을이에요."></textarea></label>
+      <label>5. 가장 자랑하고 싶은 건물은 무엇인가요?<input id="rf-proud" type="text" maxlength="100" placeholder="예: 큰 도서관"></label>
+      <label>6. 왜 이렇게 마을을 설계했나요?<textarea id="rf-design" maxlength="600" rows="3" placeholder="예: 학교와 공원을 가까이 두어서 친구들과 놀기 쉽게 만들었어요."></textarea></label>
+      <div id="rf-msg" class="modal-msg"></div>
+      <div class="modal-btns">
+        <button id="rf-ok" class="btn btn-green">완성 화면 보기</button>
+        <button class="btn btn-gray modal-close">나중에 쓰기</button>
+      </div>
+    </div>
+    <div id="modal-confirm" class="modal hidden">
+      <h2 id="cf-title">확인</h2>
+      <p id="cf-text"></p>
+      <div class="modal-btns">
+        <button id="cf-yes" class="btn btn-green">네</button>
+        <button id="cf-no" class="btn btn-gray">아니요</button>
+      </div>
+    </div>
+    <div id="modal-img" class="modal modal-wide hidden">
+      <h2 id="img-title">🖼 마을 조감도</h2>
+      <div id="img-body" class="img-body"></div>
+      <div class="modal-btns">
+        <a id="img-dl" class="btn btn-blue" download="my_village.png" href="#">이미지 저장</a>
+        <button class="btn btn-gray modal-close">닫기</button>
+      </div>
+      <p class="tiny-note">저장이 안 되면 그림을 <b>마우스 오른쪽 클릭 → 이미지를 다른 이름으로 저장</b> 하세요.</p>
+    </div>
+    <div id="modal-submit" class="modal hidden">
+      <h2 id="sb-title">📨 제출 중...</h2>
+      <div id="sb-body" class="modal-msg"></div>
+      <div class="modal-btns">
+        <button id="sb-retry" class="btn btn-blue hidden">다시 시도</button>
+        <button id="sb-close" class="btn btn-gray hidden">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <div id="loading" class="loading hidden"><div class="spin"></div><span id="loading-text">불러오는 중...</span></div>
+</div>
+
+<script>
+/*==================================================================
+ *  서버 주소 — 이미 설정 완료 (수정 불필요)
+ *================================================================*/
+var API_URL = 'https://script.google.com/macros/s/AKfycbzBi2NL8iIYyAEox-Zbf1lp4GOXhTUS0aKtAGOxNyT5uGSuaIwAaLIkDacP30XZX_Bqsw/exec';
+
+/*==================== 설정 (Code.gs와 동일) ====================*/
+var APP_CONFIG = {
+  totalArea: 100000, cellArea: 1000, grid: 10, cellCount: 100,
+  ratioSum: 10, maxStudentNo: 14,
+  classes: ['6학년 1반', '6학년 2반', '6학년 3반'],
+  zones: [
+    { key: 'C', name: '상업시설', color: '#2f80ed' },
+    { key: 'R', name: '주거시설', color: '#f97316' },
+    { key: 'N', name: '근린시설', color: '#22c55e' },
+    { key: 'E', name: '교육시설', color: '#a855f7' }
+  ],
+  catalog: [
+    { key: 'cvs', name: '편의점', zone: 'C', cells: 1, w: 1, h: 1 },
+    { key: 'cafe', name: '카페', zone: 'C', cells: 1, w: 1, h: 1 },
+    { key: 'clothes', name: '옷가게', zone: 'C', cells: 2, w: 2, h: 1 },
+    { key: 'restaurant', name: '음식점', zone: 'C', cells: 2, w: 2, h: 1 },
+    { key: 'shops', name: '상가', zone: 'C', cells: 3, w: 3, h: 1 },
+    { key: 'mart', name: '마트', zone: 'C', cells: 5, w: 5, h: 1 },
+    { key: 'house', name: '단독주택', zone: 'R', cells: 2, w: 2, h: 1 },
+    { key: 'villa', name: '빌라', zone: 'R', cells: 3, w: 3, h: 1 },
+    { key: 'apt', name: '아파트단지', zone: 'R', cells: 5, w: 5, h: 1 },
+    { key: 'bigapt', name: '대형 아파트단지', zone: 'R', cells: 10, w: 5, h: 2 },
+    { key: 'rest', name: '쉼터', zone: 'N', cells: 1, w: 1, h: 1 },
+    { key: 'trail', name: '산책로', zone: 'N', cells: 2, w: 2, h: 1 },
+    { key: 'playground', name: '놀이터', zone: 'N', cells: 3, w: 3, h: 1 },
+    { key: 'park', name: '공원', zone: 'N', cells: 5, w: 5, h: 1 },
+    { key: 'field', name: '운동장', zone: 'N', cells: 7, w: 7, h: 1 },
+    { key: 'study', name: '공부방', zone: 'E', cells: 1, w: 1, h: 1 },
+    { key: 'smalllib', name: '작은 도서관', zone: 'E', cells: 2, w: 2, h: 1 },
+    { key: 'library', name: '도서관', zone: 'E', cells: 3, w: 3, h: 1 },
+    { key: 'school', name: '학교', zone: 'E', cells: 5, w: 5, h: 1 },
+    { key: 'edumall', name: '교육복합시설', zone: 'E', cells: 10, w: 5, h: 2 }
+  ]
+};
+
+/*==================== 공통 유틸 ====================*/
+function $(id) { return document.getElementById(id); }
+function nf(n) { return (n === null || n === undefined || isNaN(n)) ? '-' : Number(n).toLocaleString('ko-KR'); }
+function esc(s) {
+  return String(s === null || s === undefined ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function toast(msg, type) {
+  var t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(function () { t.className = 'toast'; }, 2500);
+}
+var SCREENS = ['screen-start', 'screen-main', 'screen-done', 'screen-teacher'];
+var MODALS = ['modal-login', 'modal-reflect', 'modal-confirm', 'modal-img', 'modal-submit'];
+function showScreen(id) {
+  SCREENS.forEach(function (s) { $(s).classList.toggle('active', s === id); });
+}
+function openModal(id) {
+  $('modal-back').classList.remove('hidden');
+  MODALS.forEach(function (m) { $(m).classList.toggle('hidden', m !== id); });
+}
+function closeModal() {
+  $('modal-back').classList.add('hidden');
+  MODALS.forEach(function (m) { $(m).classList.add('hidden'); });
+}
+function confirmBox(title, text, onYes) {
+  $('cf-title').textContent = title;
+  $('cf-text').textContent = text;
+  openModal('modal-confirm');
+  $('cf-yes').onclick = function () { closeModal(); onYes(); };
+  $('cf-no').onclick = closeModal;
+}
+function downloadText(name, text, mime) {
+  try {
+    var blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.parentNode.removeChild(a); }, 1500);
+    return true;
+  } catch (e) { return false; }
+}
+
+/*==================== API ====================*/
+var API_OK = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_\-]{20,}\/exec/.test(API_URL);
+var jsonpSeq = 0;
+
+function jsonpCall(action, payload) {
+  return new Promise(function (res, rej) {
+    var cb = '__msgcb' + (++jsonpSeq) + '_' + Date.now();
+    var url = API_URL + '?callback=' + cb + '&action=' + encodeURIComponent(action) +
+      '&payload=' + encodeURIComponent(JSON.stringify(payload || {}));
+    if (url.length > 7000) { rej(new Error('데이터가 커서 보낼 수 없어요.')); return; }
+    var s = document.createElement('script');
+    var tm = setTimeout(function () { cleanup(); rej(new Error('서버가 응답하지 않아요.')); }, 25000);
+    function cleanup() {
+      clearTimeout(tm);
+      try { delete window[cb]; } catch (e) { window[cb] = undefined; }
+      if (s.parentNode) s.parentNode.removeChild(s);
+    }
+    window[cb] = function (data) { cleanup(); res(data); };
+    s.onerror = function () { cleanup(); rej(new Error('서버에 연결할 수 없어요.')); };
+    s.src = url;
+    document.head.appendChild(s);
+  });
+}
+
+function api(action, payload) {
+  if (!API_OK) {
+    return Promise.reject(new Error('서버 주소(API_URL)가 설정되지 않았습니다. 선생님께 알려 주세요.'));
+  }
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: action, payload: payload || {} }),
+    redirect: 'follow'
+  }).then(function (r) { return r.text(); })
+    .then(function (t) {
+      try { return JSON.parse(t); }
+      catch (e) { throw new Error('서버 응답 형식 오류'); }
+    })
+    .catch(function () { return jsonpCall(action, payload); });
+}
+
+/*==================== ART ====================*/
+var Art = (function () {
+  var ZONE_TILE = { 'C': '#9cc6fb', 'R': '#fbc38c', 'N': '#9ae6a8', 'E': '#d8b7f7', '.': '#e3dcbe' };
+  function mkctx(horiz) {
+    var parts = [];
+    function box(a, b, la, lb, hh, c, roof, z) {
+      var o = { k: 'box', z: z || 0, hh: hh, c: c, roof: roof || 'flat' };
+      if (horiz) { o.x = a; o.y = b; o.w = la; o.d = lb; }
+      else { o.x = b; o.y = a; o.w = lb; o.d = la; }
+      parts.push(o); return o;
+    }
+    function plate(a, b, la, lb, c, z) { return box(a, b, la, lb, 0.05, c, 'flat', z || 0); }
+    function tree(a, b, s) {
+      var o = { k: 'tree', s: s || 1 };
+      if (horiz) { o.x = a; o.y = b; } else { o.x = b; o.y = a; }
+      parts.push(o); return o;
+    }
+    function cyl(a, b, r, hh, c, z) {
+      var o = { k: 'cyl', r: r, hh: hh, c: c, z: z || 0 };
+      if (horiz) { o.x = a; o.y = b; } else { o.x = b; o.y = a; }
+      parts.push(o); return o;
+    }
+    function pole(a, b, hh, c) { return cyl(a, b, 0.05, hh, c, 0); }
+    return { parts: parts, box: box, plate: plate, tree: tree, cyl: cyl, pole: pole };
+  }
+
+  function parts(type, w, h) {
+    var horiz = (w >= h);
+    var L = Math.max(w, h), S = Math.min(w, h);
+    var g = mkctx(horiz), i, j, x;
+    switch (type) {
+      case 'cvs':
+        g.box(0.14, 0.14, 0.72, 0.72, 0.42, '#f3f6fa');
+        g.box(0.12, 0.08, 0.76, 0.12, 0.14, '#ef4444', 'flat', 0.42);
+        g.box(0.30, 0.05, 0.36, 0.10, 0.26, '#8ecbff', 'flat', 0.02);
+        g.box(0.18, 0.06, 0.10, 0.08, 0.22, '#f59e0b', 'flat', 0.02);
+        break;
+      case 'cafe':
+        g.box(0.16, 0.32, 0.68, 0.54, 0.40, '#fff6e8');
+        g.box(0.10, 0.26, 0.80, 0.66, 0.20, '#8b5e34', 'pyr', 0.40);
+        g.box(0.32, 0.36, 0.22, 0.08, 0.24, '#6b4423', 'flat', 0.02);
+        g.pole(0.34, 0.14, 0.26, '#b7b1a8');
+        g.box(0.16, 0.02, 0.36, 0.24, 0.07, '#ef4444', 'pyr', 0.26);
+        g.cyl(0.68, 0.16, 0.07, 0.13, '#d6d3d1', 0);
+        break;
+      case 'clothes':
+        g.box(0.12, 0.14, L - 0.24, 0.70, 0.46, '#fbd5e6');
+        g.box(0.26, 0.06, L - 0.52, 0.10, 0.30, '#2f3e63', 'flat', 0.05);
+        g.box(0.12, 0.03, L - 0.24, 0.14, 0.07, '#db2777', 'flat', 0.46);
+        g.box(L - 0.42, 0.06, 0.16, 0.09, 0.24, '#f9a8d4', 'flat', 0.05);
+        break;
+      case 'restaurant':
+        g.box(0.12, 0.14, L - 0.24, 0.70, 0.50, '#fff1f0');
+        g.box(0.08, 0.10, L - 0.16, 0.78, 0.10, '#b91c1c', 'flat', 0.50);
+        g.box(0.34, 0.04, L - 0.68, 0.10, 0.17, '#dc2626', 'flat', 0.33);
+        g.box(0.16, 0.05, 0.30, 0.09, 0.26, '#78350f', 'flat', 0.02);
+        g.cyl(L - 0.28, 0.42, 0.07, 0.22, '#9ca3af', 0.50);
+        break;
+      case 'shops':
+        var cs = ['#fde68a', '#bfdbfe', '#fecdd3'], hs = [0.50, 0.64, 0.54];
+        for (i = 0; i < 3; i++) {
+          x = 0.08 + i * (L / 3);
+          g.box(x, 0.14, L / 3 - 0.14, 0.70, hs[i], cs[i]);
+          g.box(x + 0.03, 0.06, L / 3 - 0.20, 0.09, 0.12, '#475569', 'flat', hs[i] - 0.03);
+        }
+        break;
+      case 'mart':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#cbd5e1');
+        g.box(0.22, 0.14, L - 0.44, 0.70, 0.60, '#e6ecf4');
+        g.box(0.12, 0.07, L - 0.24, 0.84, 0.11, '#2563eb', 'flat', 0.60);
+        g.box(L * 0.22, 0.02, L * 0.56, 0.12, 0.20, '#1d4ed8', 'flat', 0.30);
+        g.box(L / 2 - 0.35, 0.04, 0.70, 0.11, 0.30, '#93c5fd', 'flat', 0.01);
+        g.cyl(0.40, 0.30, 0.06, 0.60, '#94a3b8', 0);
+        g.cyl(L - 0.40, 0.30, 0.06, 0.60, '#94a3b8', 0);
+        break;
+      case 'house':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#a7d98b');
+        g.box(0.14, 0.16, 1.00, 0.68, 0.42, '#fff7ed');
+        g.box(0.07, 0.09, 1.14, 0.82, 0.30, '#dc2626', 'pyr', 0.42);
+        g.box(0.50, 0.09, 0.22, 0.09, 0.22, '#92400e', 'flat', 0.01);
+        g.box(0.24, 0.09, 0.16, 0.08, 0.14, '#8ecbff', 'flat', 0.22);
+        g.tree(L - 0.35, 0.50, 0.75);
+        break;
+      case 'villa':
+        g.box(0.14, 0.14, L - 0.28, 0.70, 0.92, '#fef3c7');
+        for (i = 0; i < 3; i++) g.box(0.11, 0.07, L - 0.22, 0.09, 0.08, '#fbbf24', 'flat', 0.20 + i * 0.25);
+        g.box(0.09, 0.09, L - 0.18, 0.80, 0.08, '#b45309', 'flat', 0.92);
+        g.box(L / 2 - 0.16, 0.06, 0.32, 0.09, 0.24, '#92400e', 'flat', 0.01);
+        break;
+      case 'apt':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#a7d98b');
+        var ah = [1.70, 2.15, 1.85];
+        for (i = 0; i < 3; i++) {
+          x = 0.28 + i * 1.55;
+          g.box(x, 0.18, 1.10, 0.62, ah[i], '#e0ecfb');
+          for (j = 0; j < 4; j++) g.box(x + 0.06, 0.12, 0.98, 0.08, 0.10, '#60a5fa', 'flat', 0.30 + j * 0.36);
+          g.box(x - 0.05, 0.13, 1.20, 0.74, 0.09, '#3b82f6', 'flat', ah[i]);
+        }
+        g.tree(L - 0.30, 0.52, 0.70);
+        break;
+      case 'bigapt':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#a7d98b');
+        var bh = [2.60, 2.20, 2.80, 2.35];
+        for (i = 0; i < 4; i++) {
+          var ax = 0.22 + i * 1.18;
+          var by = (i % 2 === 0) ? 0.18 : (S - 0.92);
+          g.box(ax, by, 1.00, 0.72, bh[i], '#e4e9fb');
+          for (j = 0; j < 5; j++) g.box(ax + 0.05, by - 0.06, 0.90, 0.08, 0.10, '#6366f1', 'flat', 0.34 + j * 0.42);
+          g.box(ax - 0.05, by - 0.06, 1.10, 0.84, 0.09, '#4f46e5', 'flat', bh[i]);
+        }
+        g.tree(L - 0.30, S / 2, 0.80);
+        g.tree(0.30, S - 0.28, 0.65);
+        break;
+      case 'rest':
+        g.plate(0.06, 0.06, L - 0.12, S - 0.12, '#a7d98b');
+        g.box(0.18, 0.56, 0.48, 0.13, 0.10, '#b45309', 'flat', 0.06);
+        g.box(0.18, 0.56, 0.48, 0.05, 0.20, '#92400e', 'flat', 0.16);
+        g.tree(0.68, 0.30, 1.00);
+        break;
+      case 'trail':
+        g.plate(0.04, 0.04, L - 0.08, S - 0.08, '#a7d98b');
+        g.plate(0.08, 0.38, L - 0.16, 0.24, '#e8d8ab', 0.05);
+        g.tree(L * 0.18, 0.16, 0.72);
+        g.tree(L * 0.50, 0.84, 0.80);
+        g.tree(L * 0.82, 0.18, 0.68);
+        break;
+      case 'playground':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#fcd9a6');
+        g.box(0.18, 0.28, 0.30, 0.42, 0.50, '#f97316', 'flat', 0.05);
+        g.box(0.48, 0.36, 0.22, 0.26, 0.34, '#fbbf24', 'flat', 0.05);
+        g.box(0.70, 0.36, 0.22, 0.26, 0.22, '#fbbf24', 'flat', 0.05);
+        g.box(0.92, 0.36, 0.22, 0.26, 0.10, '#fbbf24', 'flat', 0.05);
+        g.pole(L * 0.52, 0.24, 0.55, '#64748b');
+        g.pole(L * 0.52, 0.76, 0.55, '#64748b');
+        g.box(L * 0.49, 0.20, 0.08, 0.60, 0.07, '#64748b', 'flat', 0.55);
+        g.box(L * 0.50, 0.32, 0.06, 0.16, 0.05, '#ef4444', 'flat', 0.28);
+        g.cyl(L * 0.84, 0.50, 0.26, 0.11, '#38bdf8', 0.05);
+        break;
+      case 'park':
+        g.plate(0.04, 0.04, L - 0.08, S - 0.08, '#8fd36a');
+        g.plate(L * 0.08, 0.42, L * 0.84, 0.16, '#e8d8ab', 0.05);
+        g.cyl(L * 0.22, 0.26, 0.28, 0.06, '#6cb7f5', 0.03);
+        g.tree(L * 0.08, 0.74, 0.90);
+        g.tree(L * 0.36, 0.76, 1.00);
+        g.tree(L * 0.52, 0.22, 0.85);
+        g.tree(L * 0.70, 0.76, 0.95);
+        g.tree(L * 0.88, 0.28, 0.80);
+        g.box(L * 0.42, 0.18, 0.36, 0.10, 0.09, '#b45309', 'flat', 0.05);
+        break;
+      case 'field':
+        g.plate(0.04, 0.04, L - 0.08, S - 0.08, '#d1742f');
+        g.plate(L * 0.09, 0.17, L * 0.82, S - 0.34, '#55c66a', 0.06);
+        g.pole(L * 0.11, 0.50, 0.40, '#f8fafc');
+        g.pole(L * 0.89, 0.50, 0.40, '#f8fafc');
+        g.box(L * 0.10, 0.30, 0.07, 0.40, 0.05, '#f8fafc', 'flat', 0.40);
+        g.box(L * 0.88, 0.30, 0.07, 0.40, 0.05, '#f8fafc', 'flat', 0.40);
+        g.box(L * 0.49, 0.18, 0.04, S - 0.36, 0.055, '#f1f5f9', 'flat', 0.06);
+        break;
+      case 'study':
+        g.box(0.18, 0.18, 0.64, 0.64, 0.38, '#efe9fd');
+        g.box(0.11, 0.11, 0.78, 0.78, 0.26, '#7c3aed', 'pyr', 0.38);
+        g.box(0.30, 0.08, 0.30, 0.10, 0.16, '#fbbf24', 'flat', 0.08);
+        g.box(0.30, 0.10, 0.22, 0.08, 0.14, '#8ecbff', 'flat', 0.02);
+        break;
+      case 'smalllib':
+        g.box(0.14, 0.16, L - 0.28, 0.68, 0.46, '#f6f1ff');
+        g.box(0.08, 0.10, L - 0.16, 0.80, 0.26, '#8b5cf6', 'pyr', 0.46);
+        g.box(L / 2 - 0.26, 0.05, 0.52, 0.10, 0.15, '#6d28d9', 'flat', 0.25);
+        g.box(L / 2 - 0.14, 0.07, 0.28, 0.09, 0.22, '#a78bfa', 'flat', 0.01);
+        g.plate(L / 2 - 0.22, 0.02, 0.44, 0.12, '#e5e7eb');
+        break;
+      case 'library':
+        g.plate(0.10, 0.07, L - 0.20, S - 0.14, '#e5e7eb');
+        g.box(0.26, 0.22, L - 0.52, 0.58, 0.76, '#f6f1ff', 'flat', 0.05);
+        for (i = 0; i < 4; i++) g.cyl(0.42 + i * ((L - 0.84) / 3), 0.16, 0.07, 0.70, '#fbfaff', 0.05);
+        g.box(0.18, 0.11, L - 0.36, 0.78, 0.22, '#6d28d9', 'pyr', 0.81);
+        g.box(L / 2 - 0.40, 0.05, 0.80, 0.08, 0.16, '#a78bfa', 'flat', 0.48);
+        break;
+      case 'school':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#a7d98b');
+        g.box(0.22, 0.17, L * 0.66, 0.64, 0.92, '#fffbeb');
+        for (j = 0; j < 3; j++) g.box(0.27, 0.11, L * 0.66 - 0.10, 0.08, 0.11, '#60a5fa', 'flat', 0.20 + j * 0.25);
+        g.box(0.16, 0.11, L * 0.66 + 0.12, 0.76, 0.10, '#a855f7', 'flat', 0.92);
+        g.box(L * 0.32, 0.06, 0.44, 0.10, 0.28, '#7c3aed', 'flat', 0.01);
+        g.pole(L * 0.78, 0.26, 0.80, '#cbd5e1');
+        g.box(L * 0.79, 0.22, 0.26, 0.06, 0.16, '#ef4444', 'flat', 0.60);
+        g.plate(L * 0.80, 0.42, L * 0.16, 0.44, '#d1742f');
+        g.tree(L * 0.94, 0.20, 0.60);
+        break;
+      case 'edumall':
+        g.plate(0.05, 0.05, L - 0.10, S - 0.10, '#e8eaf0');
+        g.box(0.26, 0.24, L * 0.40, S - 0.50, 1.65, '#eee8fd');
+        for (j = 0; j < 4; j++) g.box(0.30, 0.17, L * 0.40 - 0.08, 0.09, 0.12, '#8b5cf6', 'flat', 0.28 + j * 0.34);
+        g.box(0.21, 0.19, L * 0.40 + 0.10, S - 0.40, 0.10, '#7c3aed', 'flat', 1.65);
+        g.box(L * 0.50, 0.28, L * 0.28, S - 0.58, 0.98, '#f8f5ff');
+        g.box(L * 0.49, 0.23, L * 0.28 + 0.10, S - 0.48, 0.10, '#a78bfa', 'flat', 0.98);
+        g.cyl(L * 0.87, S / 2, 0.42, 0.88, '#aef0f7', 0);
+        g.cyl(L * 0.87, S / 2, 0.47, 0.10, '#67e8f9', 0.88);
+        g.tree(L * 0.66, S - 0.24, 0.72);
+        g.tree(L * 0.12, S - 0.22, 0.66);
+        break;
+      default:
+        g.box(0.12, 0.12, w - 0.24, h - 0.24, 0.5, '#cbd5e1');
+    }
+    return g.parts;
+  }
+
+  function maxHeight(ps) {
+    var m = 0.2;
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      var t = (p.z || 0) + (p.k === 'tree' ? 0.75 * (p.s || 1) : (p.hh || 0.2));
+      if (t > m) m = t;
+    }
+    return m;
+  }
+  function shade(hex, f) {
+    var c = hex.charAt(0) === '#' ? hex.substring(1) : hex;
+    if (c.length === 3) c = c.charAt(0) + c.charAt(0) + c.charAt(1) + c.charAt(1) + c.charAt(2) + c.charAt(2);
+    var r = Math.round(parseInt(c.substring(0, 2), 16) * f);
+    var g2 = Math.round(parseInt(c.substring(2, 4), 16) * f);
+    var b = Math.round(parseInt(c.substring(4, 6), 16) * f);
+    r = Math.max(0, Math.min(255, r)); g2 = Math.max(0, Math.min(255, g2)); b = Math.max(0, Math.min(255, b));
+    return 'rgb(' + r + ',' + g2 + ',' + b + ')';
+  }
+  return {
+    parts: parts, maxHeight: maxHeight, shade: shade,
+    tileColor: function (ch) { return ZONE_TILE[ch] || ZONE_TILE['.']; },
+    TREE: { trunk: '#8b5a2b', leaf: '#2f9e44', leaf2: '#40c057' }
+  };
+})();
+
+/*==================== RENDER ====================*/
+var Render = (function () {
+  var GRIDN = 10;
+  var THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js';
+  var threeState = 'idle', waiters = [];
+
+  function loadThree(cb) {
+    if (threeState === 'ok') { cb(true); return; }
+    if (threeState === 'fail') { cb(false); return; }
+    waiters.push(cb);
+    if (threeState === 'loading') return;
+    threeState = 'loading';
+    var done = false;
+    function finish(ok) {
+      if (done) return; done = true;
+      threeState = ok ? 'ok' : 'fail';
+      var ws = waiters; waiters = [];
+      for (var i = 0; i < ws.length; i++) ws[i](ok);
+    }
+    var s = document.createElement('script');
+    s.src = THREE_URL;
+    s.onload = function () { finish(typeof THREE !== 'undefined'); };
+    s.onerror = function () { finish(false); };
+    document.head.appendChild(s);
+    setTimeout(function () { finish(typeof THREE !== 'undefined'); }, 8000);
+  }
+  function footprintSize(def, rot) {
+    var w = def.w, h = def.h;
+    if (rot % 2 === 1) { var t = w; w = h; h = t; }
+    return { w: w, h: h };
+  }
+  function makeEmitter() {
+    var map = {};
+    return {
+      on: function (ev, cb) { (map[ev] = map[ev] || []).push(cb); },
+      emit: function (ev) {
+        var a = Array.prototype.slice.call(arguments, 1), l = map[ev] || [];
+        for (var i = 0; i < l.length; i++) l[i].apply(null, a);
+      }
+    };
+  }
+  function catMap() {
+    var m = {};
+    APP_CONFIG.catalog.forEach(function (d) { m[d.key] = d; });
+    return m;
+  }
+
+  function createThree(container) {
+    var em = makeEmitter(), catalog = catMap();
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xc9e9ff);
+    var camera = new THREE.PerspectiveCamera(42, 1, 0.5, 400);
+    var rnd = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    rnd.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    rnd.domElement.style.display = 'block';
+    rnd.domElement.style.width = '100%';
+    rnd.domElement.style.height = '100%';
+    container.appendChild(rnd.domElement);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x9fd18a, 0.9));
+    var dl = new THREE.DirectionalLight(0xffffff, 0.5);
+    dl.position.set(9, 15, 7); scene.add(dl);
+
+    var root = new THREE.Group(); scene.add(root);
+    var base = new THREE.Mesh(new THREE.BoxGeometry(GRIDN + 3, 0.6, GRIDN + 3),
+      new THREE.MeshLambertMaterial({ color: 0x74bd63 }));
+    base.position.y = -0.33; root.add(base);
+    var skirt = new THREE.Mesh(new THREE.BoxGeometry(GRIDN + 0.4, 0.2, GRIDN + 0.4),
+      new THREE.MeshLambertMaterial({ color: 0xcdbe95 }));
+    skirt.position.y = -0.04; root.add(skirt);
+
+    var tileGeo = new THREE.BoxGeometry(0.94, 0.12, 0.94), tmats = {};
+    function tmat(ch) {
+      if (!tmats[ch]) tmats[ch] = new THREE.MeshLambertMaterial({ color: new THREE.Color(Art.tileColor(ch)) });
+      return tmats[ch];
+    }
+    var tiles = [];
+    for (var i = 0; i < 100; i++) {
+      var m = new THREE.Mesh(tileGeo, tmat('.'));
+      m.position.set((i % 10) - 4.5, 0.06, Math.floor(i / 10) - 4.5);
+      root.add(m); tiles.push(m);
+    }
+    var grid = new THREE.GridHelper(GRIDN, GRIDN, 0xffffff, 0xffffff);
+    grid.position.y = 0.125;
+    grid.material.transparent = true; grid.material.opacity = 0.5;
+    root.add(grid);
+
+    var bGroup = new THREE.Group(); root.add(bGroup);
+    var pGroup = new THREE.Group(); root.add(pGroup);
+    var sGroup = new THREE.Group(); root.add(sGroup);
+    var bObjs = {}, pickList = [], anims = [], dirty = true;
+    var geoCache = {}, matCache = {};
+
+    function mat(c) {
+      if (!matCache[c]) matCache[c] = new THREE.MeshLambertMaterial({ color: new THREE.Color(c) });
+      return matCache[c];
+    }
+    function boxGeo(w, h, d) {
+      var k = 'b' + w.toFixed(3) + '_' + h.toFixed(3) + '_' + d.toFixed(3);
+      if (!geoCache[k]) geoCache[k] = new THREE.BoxGeometry(w, h, d);
+      return geoCache[k];
+    }
+    function coneGeo() { if (!geoCache.cone) geoCache.cone = new THREE.ConeGeometry(0.5, 1, 4); return geoCache.cone; }
+    function cylGeo() { if (!geoCache.cyl) geoCache.cyl = new THREE.CylinderGeometry(0.5, 0.5, 1, 14); return geoCache.cyl; }
+    function sphGeo() { if (!geoCache.sph) geoCache.sph = new THREE.IcosahedronGeometry(0.5, 0); return geoCache.sph; }
+
+    function buildModel(type, w, h) {
+      var ps = Art.parts(type, w, h), g = new THREE.Group();
+      var ox = -w / 2, oz = -h / 2;
+      for (var i = 0; i < ps.length; i++) {
+        var p = ps[i], m2;
+        if (p.k === 'box') {
+          if (p.roof === 'pyr') {
+            m2 = new THREE.Mesh(coneGeo(), mat(p.c));
+            m2.rotation.y = Math.PI / 4;
+            m2.scale.set(p.w / 0.7071, p.hh, p.d / 0.7071);
+          } else {
+            m2 = new THREE.Mesh(boxGeo(p.w, p.hh, p.d), mat(p.c));
+          }
+          m2.position.set(ox + p.x + p.w / 2, (p.z || 0) + p.hh / 2, oz + p.y + p.d / 2);
+          g.add(m2);
+        } else if (p.k === 'cyl') {
+          m2 = new THREE.Mesh(cylGeo(), mat(p.c));
+          m2.scale.set(p.r * 2, p.hh, p.r * 2);
+          m2.position.set(ox + p.x, (p.z || 0) + p.hh / 2, oz + p.y);
+          g.add(m2);
+        } else if (p.k === 'tree') {
+          var s = p.s || 1;
+          var tr = new THREE.Mesh(cylGeo(), mat(Art.TREE.trunk));
+          tr.scale.set(0.10 * s, 0.34 * s, 0.10 * s);
+          tr.position.set(ox + p.x, 0.17 * s, oz + p.y); g.add(tr);
+          var l1 = new THREE.Mesh(sphGeo(), mat(Art.TREE.leaf));
+          l1.scale.set(0.46 * s, 0.46 * s, 0.46 * s);
+          l1.position.set(ox + p.x, 0.52 * s, oz + p.y); g.add(l1);
+          var l2 = new THREE.Mesh(sphGeo(), mat(Art.TREE.leaf2));
+          l2.scale.set(0.32 * s, 0.32 * s, 0.32 * s);
+          l2.position.set(ox + p.x + 0.07 * s, 0.73 * s, oz + p.y - 0.05 * s); g.add(l2);
+        }
+      }
+      return g;
+    }
+
+    var cam = { th: -0.80, ph: 0.92, dist: 17.5, tx: 0, ty: 0, tz: 0 };
+    function applyCam() {
+      var sp = Math.sin(cam.ph), cp = Math.cos(cam.ph);
+      camera.position.set(cam.tx + cam.dist * sp * Math.sin(cam.th),
+                          cam.ty + cam.dist * cp,
+                          cam.tz + cam.dist * sp * Math.cos(cam.th));
+      camera.lookAt(cam.tx, cam.ty, cam.tz);
+      dirty = true;
+    }
+    function resetCam() { cam.th = -0.80; cam.ph = 0.92; cam.dist = 17.5; cam.tx = cam.ty = cam.tz = 0; applyCam(); }
+    resetCam();
+
+    var leftMode = 'orbit', down = false, btn = 0, sx = 0, sy = 0, moved = false, lastPaint = -1;
+    var ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+    function pick(ev) {
+      var rect = rnd.domElement.getBoundingClientRect();
+      if (!rect.width || !rect.height) return null;
+      ndc.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
+      ndc.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
+      ray.setFromCamera(ndc, camera);
+      var hits = ray.intersectObjects(pickList.concat(tiles), false);
+      if (!hits.length) return null;
+      var hit = hits[0], bid = hit.object.userData.bid || null;
+      var c = Math.floor(hit.point.x + 5), r = Math.floor(hit.point.z + 5);
+      if (bid && bObjs[bid]) { r = bObjs[bid].data.r; c = bObjs[bid].data.c; }
+      if (r < 0 || r > 9 || c < 0 || c > 9) return null;
+      return { r: r, c: c, bid: bid };
+    }
+    function onDown(ev) {
+      down = true; btn = ev.button; sx = ev.clientX; sy = ev.clientY; moved = false; lastPaint = -1;
+      if (btn === 0 && leftMode === 'paint') {
+        var p = pick(ev);
+        if (p) { lastPaint = p.r * 10 + p.c; em.emit('paint', p.r, p.c); }
+      }
+      if (ev.preventDefault) ev.preventDefault();
+    }
+    function onMove(ev) {
+      if (!down) {
+        var hv = pick(ev);
+        if (hv) em.emit('hover', hv.r, hv.c, hv.bid); else em.emit('hover', -1, -1, null);
+        return;
+      }
+      var dx = ev.clientX - sx, dy = ev.clientY - sy;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      if (btn === 0 && leftMode === 'paint') {
+        var p = pick(ev);
+        if (p) {
+          var k = p.r * 10 + p.c;
+          if (k !== lastPaint) { lastPaint = k; em.emit('paint', p.r, p.c); }
+        }
+      } else if (btn === 1 || ev.shiftKey) {
+        var f = cam.dist * 0.0016;
+        cam.tx -= (Math.cos(cam.th) * dx + Math.sin(cam.th) * dy) * f;
+        cam.tz -= (-Math.sin(cam.th) * dx + Math.cos(cam.th) * dy) * f;
+        cam.tx = Math.max(-8, Math.min(8, cam.tx));
+        cam.tz = Math.max(-8, Math.min(8, cam.tz));
+        applyCam();
+      } else {
+        cam.th -= dx * 0.008;
+        cam.ph = Math.max(0.22, Math.min(1.35, cam.ph - dy * 0.006));
+        applyCam();
+      }
+      sx = ev.clientX; sy = ev.clientY;
+      if (ev.preventDefault) ev.preventDefault();
+    }
+    function onUp(ev) {
+      if (!down) return;
+      down = false;
+      if (btn === 0 && leftMode === 'paint') { em.emit('paintend'); return; }
+      if (!moved && btn === 0) {
+        var p = pick(ev);
+        if (p) em.emit('click', p.r, p.c, p.bid);
+      }
+    }
+    function onWheel(ev) {
+      cam.dist = Math.max(6.5, Math.min(38, cam.dist * (ev.deltaY > 0 ? 1.1 : 0.91)));
+      applyCam(); ev.preventDefault();
+    }
+    var el = rnd.domElement;
+    el.addEventListener('mousedown', onDown);
+    el.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    el.addEventListener('wheel', onWheel, { passive: false });
+    el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    el.addEventListener('mouseleave', function () { em.emit('hover', -1, -1, null); });
+    el.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 1) onDown({ button: 0, clientX: e.touches[0].clientX, clientY: e.touches[0].clientY });
+    }, { passive: true });
+    el.addEventListener('touchmove', function (e) {
+      if (e.touches.length === 1) onMove({ button: 0, clientX: e.touches[0].clientX, clientY: e.touches[0].clientY, shiftKey: false });
+    }, { passive: true });
+    el.addEventListener('touchend', function () { onUp({ button: 0, clientX: sx, clientY: sy }); });
+
+    function setZones(z) {
+      for (var i = 0; i < tiles.length; i++) {
+        var want = tmat(z.charAt(i) || '.');
+        if (tiles[i].material !== want) tiles[i].material = want;
+      }
+      dirty = true;
+    }
+    function sig(b) { return b.type + ':' + b.r + ':' + b.c + ':' + b.rot; }
+    function addB(b) {
+      var def = catalog[b.type]; if (!def) return;
+      var fs = footprintSize(def, b.rot);
+      var g = buildModel(b.type, fs.w, fs.h);
+      g.position.x = (b.c + fs.w / 2) - 5;
+      g.position.z = (b.r + fs.h / 2) - 5;
+      g.position.y = 0.12;
+      bGroup.add(g);
+      var hmax = Art.maxHeight(Art.parts(b.type, fs.w, fs.h));
+      var pm = new THREE.Mesh(boxGeo(fs.w * 0.98, hmax, fs.h * 0.98),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 }));
+      pm.position.set(g.position.x, hmax / 2 + 0.12, g.position.z);
+      pm.userData.bid = b.id;
+      bGroup.add(pm);
+      bObjs[String(b.id)] = { group: g, pick: pm, data: b, sig: sig(b), h: hmax };
+      g.scale.y = 0.08; g.position.y = -0.4;
+      anims.push({ g: g, t0: performance.now(), dur: 380, y0: -0.4, y1: 0.12 });
+    }
+    function removeB(key) {
+      var o = bObjs[key]; if (!o) return;
+      bGroup.remove(o.group); bGroup.remove(o.pick);
+      delete bObjs[key];
+    }
+    function setBuildings(list) {
+      var seen = {};
+      for (var i = 0; i < list.length; i++) {
+        var b = list[i], key = String(b.id);
+        seen[key] = true;
+        var ex = bObjs[key];
+        if (ex && ex.sig === sig(b)) continue;
+        if (ex) removeB(key);
+        addB(b);
+      }
+      for (var k in bObjs) if (!seen[k]) removeB(k);
+      pickList = [];
+      for (var k2 in bObjs) pickList.push(bObjs[k2].pick);
+      dirty = true;
+    }
+    function setPreview(cells, ok) {
+      while (pGroup.children.length) pGroup.remove(pGroup.children[0]);
+      if (!cells || !cells.length) { dirty = true; return; }
+      var m2 = new THREE.MeshBasicMaterial({ color: ok ? 0x37d14f : 0xff4d4d, transparent: true, opacity: 0.55 });
+      for (var i = 0; i < cells.length; i++) {
+        var t = new THREE.Mesh(boxGeo(0.92, 0.3, 0.92), m2);
+        t.position.set((cells[i] % 10) - 4.5, 0.22, Math.floor(cells[i] / 10) - 4.5);
+        pGroup.add(t);
+      }
+      dirty = true;
+    }
+    function setSelected(bid) {
+      while (sGroup.children.length) sGroup.remove(sGroup.children[0]);
+      var o = bid ? bObjs[String(bid)] : null;
+      if (o) {
+        var fs = footprintSize(catalog[o.data.type], o.data.rot);
+        var box = new THREE.Mesh(boxGeo(fs.w, o.h + 0.2, fs.h),
+          new THREE.MeshBasicMaterial({ color: 0xffd166, wireframe: true }));
+        box.position.set((o.data.c + fs.w / 2) - 5, (o.h + 0.2) / 2, (o.data.r + fs.h / 2) - 5);
+        sGroup.add(box);
+      }
+      dirty = true;
+    }
+
+    var lw = 0, lh = 0, alive = true;
+    function loop() {
+      if (!alive) return;
+      requestAnimationFrame(loop);
+      var w = container.clientWidth, h = container.clientHeight;
+      if (!w || !h) return;
+      if (w !== lw || h !== lh) {
+        lw = w; lh = h;
+        rnd.setSize(w, h, false);
+        camera.aspect = w / h; camera.updateProjectionMatrix();
+        dirty = true;
+      }
+      if (anims.length) {
+        var now = performance.now(), keep = [];
+        for (var i = 0; i < anims.length; i++) {
+          var a = anims[i], t = (now - a.t0) / a.dur;
+          if (t >= 1) { a.g.scale.y = 1; a.g.position.y = a.y1; }
+          else {
+            var e = 1 - Math.pow(1 - t, 3);
+            a.g.scale.y = 0.08 + 0.92 * e;
+            a.g.position.y = a.y0 + (a.y1 - a.y0) * e;
+            keep.push(a);
+          }
+        }
+        anims = keep; dirty = true;
+      }
+      if (dirty) { rnd.render(scene, camera); dirty = false; }
+    }
+    loop();
+
+    return {
+      kind: '3D',
+      setZones: setZones, setBuildings: setBuildings, setPreview: setPreview, setSelected: setSelected,
+      setLeftMode: function (m) { leftMode = m; el.style.cursor = (m === 'paint' ? 'crosshair' : 'grab'); },
+      rotateView: function (d) { cam.th += d * Math.PI / 8; applyCam(); },
+      zoomBy: function (f) { cam.dist = Math.max(6.5, Math.min(38, cam.dist * f)); applyCam(); },
+      resetCamera: resetCam,
+      fitAll: function () { cam.ph = 0.80; cam.dist = 21; cam.tx = cam.ty = cam.tz = 0; applyCam(); },
+      screenshot: function () { rnd.render(scene, camera); return rnd.domElement.toDataURL('image/png'); },
+      resize: function () { dirty = true; },
+      on: em.on
+    };
+  }
+
+  var ISO = { TW: 56, TH: 28, ZS: 42 };
+  function createCanvas2D(container) {
+    var em = makeEmitter(), catalog = catMap();
+    var cv = document.createElement('canvas');
+    cv.style.display = 'block'; cv.style.width = '100%'; cv.style.height = '100%';
+    container.appendChild(cv);
+    var ctx = cv.getContext('2d');
+    var view = { rot: 0, zoom: 1, panX: 0, panY: 40 };
+    var zones = '';
+    for (var z0 = 0; z0 < 100; z0++) zones += '.';
+    var builds = [], preview = null, selected = null, leftMode = 'orbit', anim = {}, need = true, alive = true;
+
+    function toView(x, y) {
+      var u = x - 5, v = y - 5, t;
+      if (view.rot === 1) { t = u; u = -v; v = t; }
+      else if (view.rot === 2) { u = -u; v = -v; }
+      else if (view.rot === 3) { t = u; u = v; v = -t; }
+      return { x: u + 5, y: v + 5 };
+    }
+    function fromView(x, y) {
+      var u = x - 5, v = y - 5, t;
+      if (view.rot === 1) { t = v; v = -u; u = t; }
+      else if (view.rot === 2) { u = -u; v = -v; }
+      else if (view.rot === 3) { t = -v; v = u; u = t; }
+      return { x: u + 5, y: v + 5 };
+    }
+    function vrect(x, y, w, d) {
+      var a = toView(x, y), b = toView(x + w, y + d);
+      return { x: Math.min(a.x, b.x), y: Math.min(a.y, b.y), w: Math.abs(b.x - a.x), d: Math.abs(b.y - a.y) };
+    }
+    function prj(gx, gy, gz) {
+      var cw = container.clientWidth || 600, chh = container.clientHeight || 400;
+      return {
+        x: cw / 2 + view.panX + ((gx - 5) - (gy - 5)) * (ISO.TW / 2) * view.zoom,
+        y: chh / 2 + view.panY - 90 * view.zoom + ((gx - 5) + (gy - 5)) * (ISO.TH / 2) * view.zoom - gz * ISO.ZS * view.zoom
+      };
+    }
+    function unprj(sx2, sy2) {
+      var cw = container.clientWidth || 600, chh = container.clientHeight || 400;
+      var dx = (sx2 - (cw / 2 + view.panX)) / ((ISO.TW / 2) * view.zoom);
+      var dy = (sy2 - (chh / 2 + view.panY - 90 * view.zoom)) / ((ISO.TH / 2) * view.zoom);
+      return { x: (dx + dy) / 2 + 5, y: (dy - dx) / 2 + 5 };
+    }
+    function poly(pts, fill, stroke, lw) {
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1; ctx.stroke(); }
+    }
+    function drawTile(x, y, w, d, z, fill, stroke, lw) {
+      poly([prj(x, y, z), prj(x + w, y, z), prj(x + w, y + d, z), prj(x, y + d, z)], fill, stroke, lw);
+    }
+    function drawBox(x, y, w, d, z, hh, color) {
+      var top = z + hh;
+      poly([prj(x, y + d, top), prj(x + w, y + d, top), prj(x + w, y + d, z), prj(x, y + d, z)], Art.shade(color, 0.78));
+      poly([prj(x + w, y, top), prj(x + w, y + d, top), prj(x + w, y + d, z), prj(x + w, y, z)], Art.shade(color, 0.62));
+      poly([prj(x, y, top), prj(x + w, y, top), prj(x + w, y + d, top), prj(x, y + d, top)], color);
+    }
+    function drawPyr(x, y, w, d, z, hh, color) {
+      var ap = prj(x + w / 2, y + d / 2, z + hh);
+      var c1 = prj(x, y, z), c2 = prj(x + w, y, z), c3 = prj(x + w, y + d, z), c4 = prj(x, y + d, z);
+      poly([c1, c2, ap], Art.shade(color, 0.55));
+      poly([c1, c4, ap], Art.shade(color, 0.62));
+      poly([c2, c3, ap], Art.shade(color, 0.80));
+      poly([c4, c3, ap], color);
+    }
+    function drawCyl(cxg, cyg, r, z, hh, color) {
+      var rx = r * ISO.TW * 0.707 * view.zoom, ry = r * ISO.TH * 0.707 * view.zoom;
+      var pt = prj(cxg, cyg, z + hh), pb = prj(cxg, cyg, z);
+      ctx.fillStyle = Art.shade(color, 0.7);
+      ctx.beginPath();
+      ctx.moveTo(pt.x - rx, pt.y); ctx.lineTo(pb.x - rx, pb.y);
+      ctx.ellipse(pb.x, pb.y, rx, ry, 0, Math.PI, 0, true);
+      ctx.lineTo(pt.x + rx, pt.y); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.ellipse(pt.x, pt.y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    function drawTree(cxg, cyg, s) {
+      var p0 = prj(cxg, cyg, 0);
+      var trunkH = 0.34 * s * ISO.ZS * view.zoom;
+      var wTr = Math.max(2, 0.10 * s * ISO.TW * view.zoom * 0.6);
+      ctx.fillStyle = Art.TREE.trunk;
+      ctx.fillRect(p0.x - wTr / 2, p0.y - trunkH, wTr, trunkH);
+      var r1 = 0.26 * s * ISO.TW * view.zoom * 0.9;
+      ctx.fillStyle = Art.TREE.leaf;
+      ctx.beginPath(); ctx.arc(p0.x, p0.y - trunkH - r1 * 0.55, r1, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = Art.TREE.leaf2;
+      ctx.beginPath(); ctx.arc(p0.x + r1 * 0.26, p0.y - trunkH - r1 * 1.25, r1 * 0.66, 0, Math.PI * 2); ctx.fill();
+    }
+    function drawParts(ps, bx, by, grow) {
+      var list = [];
+      for (var i = 0; i < ps.length; i++) {
+        var p = ps[i];
+        if (p.k === 'tree' || p.k === 'cyl') {
+          var cc = toView(bx + p.x, by + p.y);
+          list.push({ p: p, vx: cc.x, vy: cc.y, key: cc.x + cc.y + (p.z || 0) * 0.01 });
+        } else {
+          var R = vrect(bx + p.x, by + p.y, p.w, p.d);
+          list.push({ p: p, R: R, key: R.x + R.y + (p.z || 0) * 0.01 });
+        }
+      }
+      list.sort(function (a, b) { return a.key - b.key; });
+      for (var j = 0; j < list.length; j++) {
+        var o = list[j], q = o.p, gz = (q.z || 0), gh = (q.hh || 0.2);
+        if (grow < 1) { gz = gz * grow; gh = gh * grow; }
+        if (q.k === 'box') {
+          if (q.roof === 'pyr') drawPyr(o.R.x, o.R.y, o.R.w, o.R.d, gz, gh, q.c);
+          else drawBox(o.R.x, o.R.y, o.R.w, o.R.d, gz, gh, q.c);
+        } else if (q.k === 'cyl') drawCyl(o.vx, o.vy, q.r, gz, gh, q.c);
+        else if (q.k === 'tree') drawTree(o.vx, o.vy, (q.s || 1) * grow);
+      }
+    }
+    function draw() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = container.clientWidth, h = container.clientHeight;
+      if (!w || !h) return;
+      if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+        cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var gr = ctx.createLinearGradient(0, 0, 0, h);
+      gr.addColorStop(0, '#c9e9ff'); gr.addColorStop(1, '#e8f7ff');
+      ctx.fillStyle = gr; ctx.fillRect(0, 0, w, h);
+      drawTile(-1.5, -1.5, 13, 13, -0.06, '#74bd63', '#5fa551', 1);
+      drawTile(-0.2, -0.2, 10.4, 10.4, -0.02, '#cdbe95', '#b6a87f', 1);
+      var i, r, c;
+      for (i = 0; i < 100; i++) {
+        r = Math.floor(i / 10); c = i % 10;
+        var R = vrect(c, r, 1, 1);
+        drawTile(R.x + 0.03, R.y + 0.03, 0.94, 0.94, 0, Art.tileColor(zones.charAt(i) || '.'), 'rgba(255,255,255,.75)', 1);
+      }
+      var now = performance.now(), items = [];
+      for (i = 0; i < builds.length; i++) {
+        var b = builds[i], def = catalog[b.type];
+        if (!def) continue;
+        var fs = footprintSize(def, b.rot), VR = vrect(b.c, b.r, fs.w, fs.h);
+        items.push({ b: b, fs: fs, key: VR.x + VR.y, VR: VR });
+      }
+      items.sort(function (a, b2) { return a.key - b2.key; });
+      for (i = 0; i < items.length; i++) {
+        var it = items[i], ps = Art.parts(it.b.type, it.fs.w, it.fs.h), st = anim[it.b.id], grow = 1;
+        if (st) {
+          var t = (now - st) / 380;
+          if (t >= 1) delete anim[it.b.id];
+          else { grow = 0.1 + 0.9 * (1 - Math.pow(1 - t, 3)); need = true; }
+        }
+        drawParts(ps, it.b.c, it.b.r, grow);
+        if (selected && String(selected) === String(it.b.id)) {
+          drawTile(it.VR.x, it.VR.y, it.VR.w, it.VR.d, 0.02, 'rgba(255,209,102,.35)', '#ffb703', 3);
+        }
+      }
+      if (preview && preview.cells && preview.cells.length) {
+        var fill = preview.ok ? 'rgba(55,209,79,.55)' : 'rgba(255,77,77,.55)';
+        var line = preview.ok ? '#1f9c37' : '#c62828';
+        for (i = 0; i < preview.cells.length; i++) {
+          r = Math.floor(preview.cells[i] / 10); c = preview.cells[i] % 10;
+          var PR = vrect(c, r, 1, 1);
+          drawTile(PR.x + 0.02, PR.y + 0.02, 0.96, 0.96, 0.16, fill, line, 2);
+        }
+      }
+    }
+    function loop() {
+      if (!alive) return;
+      requestAnimationFrame(loop);
+      var hasAnim = false;
+      for (var k in anim) { hasAnim = true; break; }
+      if (need || hasAnim) { need = false; draw(); }
+    }
+    function silhouette(b) {
+      var def = catalog[b.type]; if (!def) return null;
+      var fs = footprintSize(def, b.rot), R = vrect(b.c, b.r, fs.w, fs.h);
+      var hmax = Art.maxHeight(Art.parts(b.type, fs.w, fs.h));
+      return [prj(R.x, R.y, hmax), prj(R.x + R.w, R.y, hmax), prj(R.x + R.w, R.y + R.d, hmax),
+              prj(R.x + R.w, R.y + R.d, 0), prj(R.x, R.y + R.d, 0), prj(R.x, R.y, 0)];
+    }
+    function inPoly(pts, x, y) {
+      var inside = false;
+      for (var i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+        var xi = pts[i].x, yi = pts[i].y, xj = pts[j].x, yj = pts[j].y;
+        if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+      }
+      return inside;
+    }
+    function pickAt(ev) {
+      var rect = cv.getBoundingClientRect();
+      var mx = ev.clientX - rect.left, my = ev.clientY - rect.top, items = [];
+      for (var i = 0; i < builds.length; i++) {
+        var def = catalog[builds[i].type]; if (!def) continue;
+        var fs = footprintSize(def, builds[i].rot), R = vrect(builds[i].c, builds[i].r, fs.w, fs.h);
+        items.push({ b: builds[i], key: R.x + R.y });
+      }
+      items.sort(function (a, b) { return b.key - a.key; });
+      for (var j = 0; j < items.length; j++) {
+        var sp = silhouette(items[j].b);
+        if (sp && inPoly(sp, mx, my)) return { r: items[j].b.r, c: items[j].b.c, bid: items[j].b.id };
+      }
+      var g = unprj(mx, my), gg = fromView(g.x, g.y);
+      var cc = Math.floor(gg.x), rr = Math.floor(gg.y);
+      if (rr < 0 || rr > 9 || cc < 0 || cc > 9) return null;
+      return { r: rr, c: cc, bid: null };
+    }
+    var down = false, btn = 0, sx = 0, sy = 0, moved = false, lastPaint = -1;
+    function onDown(ev) {
+      down = true; btn = ev.button; sx = ev.clientX; sy = ev.clientY; moved = false; lastPaint = -1;
+      if (btn === 0 && leftMode === 'paint') {
+        var p = pickAt(ev);
+        if (p) { lastPaint = p.r * 10 + p.c; em.emit('paint', p.r, p.c); }
+      }
+      if (ev.preventDefault) ev.preventDefault();
+    }
+    function onMove(ev) {
+      if (!down) {
+        var hv = pickAt(ev);
+        if (hv) em.emit('hover', hv.r, hv.c, hv.bid); else em.emit('hover', -1, -1, null);
+        return;
+      }
+      var dx = ev.clientX - sx, dy = ev.clientY - sy;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+      if (btn === 0 && leftMode === 'paint') {
+        var p2 = pickAt(ev);
+        if (p2) {
+          var k = p2.r * 10 + p2.c;
+          if (k !== lastPaint) { lastPaint = k; em.emit('paint', p2.r, p2.c); }
+        }
+      } else { view.panX += dx; view.panY += dy; need = true; }
+      sx = ev.clientX; sy = ev.clientY;
+      if (ev.preventDefault) ev.preventDefault();
+    }
+    function onUp(ev) {
+      if (!down) return;
+      down = false;
+      if (btn === 0 && leftMode === 'paint') { em.emit('paintend'); return; }
+      if (!moved && btn === 0) {
+        var p = pickAt(ev);
+        if (p) em.emit('click', p.r, p.c, p.bid);
+      }
+    }
+    cv.addEventListener('mousedown', onDown);
+    cv.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    cv.addEventListener('wheel', function (ev) {
+      view.zoom = Math.max(0.45, Math.min(2.6, view.zoom * (ev.deltaY > 0 ? 0.9 : 1.11)));
+      need = true; ev.preventDefault();
+    }, { passive: false });
+    cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    cv.addEventListener('mouseleave', function () { em.emit('hover', -1, -1, null); });
+    loop();
+
+    return {
+      kind: '2.5D',
+      setZones: function (z) { zones = z; need = true; },
+      setBuildings: function (list) {
+        var old = {};
+        builds.forEach(function (b) { old[b.id] = b.type + b.r + b.c + b.rot; });
+        builds = list.slice();
+        builds.forEach(function (b) {
+          if (old[b.id] !== (b.type + b.r + b.c + b.rot)) anim[b.id] = performance.now();
+        });
+        need = true;
+      },
+      setPreview: function (cells, ok) { preview = (cells && cells.length) ? { cells: cells, ok: ok } : null; need = true; },
+      setSelected: function (bid) { selected = bid; need = true; },
+      setLeftMode: function (m) { leftMode = m; cv.style.cursor = (m === 'paint' ? 'crosshair' : 'grab'); },
+      rotateView: function (d) { view.rot = ((view.rot + (d > 0 ? 1 : 3)) % 4 + 4) % 4; need = true; },
+      zoomBy: function (f) { view.zoom = Math.max(0.45, Math.min(2.6, view.zoom * (1 / f))); need = true; },
+      resetCamera: function () { view.rot = 0; view.zoom = 1; view.panX = 0; view.panY = 40; need = true; },
+      fitAll: function () { view.zoom = 0.9; view.panX = 0; view.panY = 40; need = true; },
+      screenshot: function () { draw(); return cv.toDataURL('image/png'); },
+      resize: function () { need = true; },
+      on: em.on
+    };
+  }
+
+  function drawThumb(canvas, type) {
+    var cat = catMap(), def = cat[type];
+    if (!def) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = canvas.clientWidth || 130, h = canvas.clientHeight || 62;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    var ps = Art.parts(type, def.w, def.h), hmax = Art.maxHeight(ps);
+    var tw = 26, th = 13, zs = 20, span = def.w + def.h;
+    var zoom = Math.min((w - 10) / (span * tw / 2 + 8), (h - 8) / (span * th / 2 + hmax * zs + 6));
+    zoom = Math.max(0.35, Math.min(1.7, zoom));
+    var ox = w / 2, oy = h - 10;
+    function prj(gx, gy, gz) {
+      return {
+        x: ox + ((gx - def.w / 2) - (gy - def.h / 2)) * (tw / 2) * zoom,
+        y: oy + ((gx - def.w / 2) + (gy - def.h / 2)) * (th / 2) * zoom - gz * zs * zoom - hmax * zs * zoom * 0.1
+      };
+    }
+    function poly(pts, fill, stroke) {
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
+    }
+    poly([prj(0, 0, 0), prj(def.w, 0, 0), prj(def.w, def.h, 0), prj(0, def.h, 0)],
+      Art.tileColor(def.zone), 'rgba(255,255,255,.8)');
+    var list = ps.map(function (p) { return { p: p, key: p.x + p.y + (p.z || 0) * 0.01 }; });
+    list.sort(function (a, b) { return a.key - b.key; });
+    list.forEach(function (o) {
+      var p = o.p, z = p.z || 0, hh = p.hh || 0.2;
+      if (p.k === 'box') {
+        if (p.roof === 'pyr') {
+          var ap = prj(p.x + p.w / 2, p.y + p.d / 2, z + hh);
+          var c1 = prj(p.x, p.y, z), c2 = prj(p.x + p.w, p.y, z),
+              c3 = prj(p.x + p.w, p.y + p.d, z), c4 = prj(p.x, p.y + p.d, z);
+          poly([c1, c2, ap], Art.shade(p.c, 0.55));
+          poly([c1, c4, ap], Art.shade(p.c, 0.62));
+          poly([c2, c3, ap], Art.shade(p.c, 0.8));
+          poly([c4, c3, ap], p.c);
+        } else {
+          var top = z + hh;
+          poly([prj(p.x, p.y + p.d, top), prj(p.x + p.w, p.y + p.d, top),
+                prj(p.x + p.w, p.y + p.d, z), prj(p.x, p.y + p.d, z)], Art.shade(p.c, 0.78));
+          poly([prj(p.x + p.w, p.y, top), prj(p.x + p.w, p.y + p.d, top),
+                prj(p.x + p.w, p.y + p.d, z), prj(p.x + p.w, p.y, z)], Art.shade(p.c, 0.62));
+          poly([prj(p.x, p.y, top), prj(p.x + p.w, p.y, top),
+                prj(p.x + p.w, p.y + p.d, top), prj(p.x, p.y + p.d, top)], p.c);
+        }
+      } else if (p.k === 'cyl') {
+        var rx = p.r * tw * 0.707 * zoom, ry = p.r * th * 0.707 * zoom;
+        var pt = prj(p.x, p.y, z + hh), pb = prj(p.x, p.y, z);
+        ctx.fillStyle = Art.shade(p.c, 0.7);
+        ctx.beginPath(); ctx.moveTo(pt.x - rx, pt.y); ctx.lineTo(pb.x - rx, pb.y);
+        ctx.ellipse(pb.x, pb.y, rx, ry, 0, Math.PI, 0, true);
+        ctx.lineTo(pt.x + rx, pt.y); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = p.c;
+        ctx.beginPath(); ctx.ellipse(pt.x, pt.y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+      } else if (p.k === 'tree') {
+        var p0 = prj(p.x, p.y, 0), s = p.s || 1;
+        var tH = 0.34 * s * zs * zoom, wTr = Math.max(1.6, 0.08 * s * tw * zoom);
+        ctx.fillStyle = Art.TREE.trunk;
+        ctx.fillRect(p0.x - wTr / 2, p0.y - tH, wTr, tH);
+        var r1 = Math.max(2.5, 0.26 * s * tw * zoom);
+        ctx.fillStyle = Art.TREE.leaf;
+        ctx.beginPath(); ctx.arc(p0.x, p0.y - tH - r1 * 0.5, r1, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = Art.TREE.leaf2;
+        ctx.beginPath(); ctx.arc(p0.x + r1 * 0.25, p0.y - tH - r1 * 1.2, r1 * 0.62, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+  }
+
+  return {
+    createRenderer: function (container, cb) {
+      loadThree(function (ok) {
+        var r;
+        if (ok) { try { r = createThree(container); } catch (e) { r = createCanvas2D(container); } }
+        else r = createCanvas2D(container);
+        cb(r);
+      });
+    },
+    drawThumb: drawThumb,
+    footprintSize: footprintSize
+  };
+})();
+
+/*==================== 학생 로직 ====================*/
+var CFG = APP_CONFIG;
+var ZK = ['C', 'R', 'N', 'E'];
+var ZMAP = {}; CFG.zones.forEach(function (z) { ZMAP[z.key] = z; });
+var CAT = {}; CFG.catalog.forEach(function (d) { CAT[d.key] = d; });
+var SAVE_PREFIX = 'MSG_VILLAGE_v2_';
+
+var S = {
+  step: 1, cls: '', no: 0, nick: '', village: '',
+  ratio: [null, null, null, null], areas: [null, null, null, null], step1ok: false,
+  zones: [], buildings: [], nextId: 1,
+  tool: { mode: 'none', zone: null, type: null, rot: 0, move: false },
+  selected: null,
+  reflection: { widestFacility: '', widestReason: '', villageFeature: '', proudBuilding: '', designReason: '' },
+  submitting: false, clientKey: null, submittedAt: ''
+};
+for (var zi0 = 0; zi0 < 100; zi0++) S.zones.push('.');
+
+var R3 = null, RDONE = null, undoStack = [], redoStack = [], hoverCell = null, paintSession = false;
+
+function zoneIndex(k) { return ZK.indexOf(k); }
+function limitCells(k) { var a = S.areas[zoneIndex(k)]; return a ? a / CFG.cellArea : 0; }
+function zoneCount(k) { var n = 0; for (var i = 0; i < 100; i++) if (S.zones[i] === k) n++; return n; }
+function zonesString() { return S.zones.join(''); }
+function footprint(type, r, c, rot) {
+  var def = CAT[type]; if (!def) return null;
+  var fs = Render.footprintSize(def, rot);
+  if (r < 0 || c < 0 || r + fs.h > 10 || c + fs.w > 10) return null;
+  var out = [];
+  for (var i = 0; i < fs.h; i++) for (var j = 0; j < fs.w; j++) out.push((r + i) * 10 + (c + j));
+  return out;
+}
+function occupancy(exceptId) {
+  var map = {};
+  for (var i = 0; i < S.buildings.length; i++) {
+    var b = S.buildings[i];
+    if (exceptId && b.id === exceptId) continue;
+    var cells = footprint(b.type, b.r, b.c, b.rot) || [];
+    for (var j = 0; j < cells.length; j++) map[cells[j]] = b.id;
+  }
+  return map;
+}
+function canPlace(type, r, c, rot, exceptId) {
+  var def = CAT[type];
+  if (!def) return { ok: false, cells: [], reason: '알 수 없는 건물이에요.' };
+  var cells = footprint(type, r, c, rot);
+  if (!cells) return { ok: false, cells: [], reason: '부지 밖으로 나가요. 회전(R)해 보세요!' };
+  var occ = occupancy(exceptId);
+  for (var i = 0; i < cells.length; i++) {
+    if (S.zones[cells[i]] !== def.zone) {
+      return { ok: false, cells: cells, reason: def.name + '은(는) ' + ZMAP[def.zone].name + ' 땅에만 지을 수 있어요!' };
+    }
+    if (occ[cells[i]]) return { ok: false, cells: cells, reason: '이미 다른 건물이 있어요.' };
+  }
+  return { ok: true, cells: cells };
+}
+function builtArea(k) {
+  var sum = 0;
+  for (var i = 0; i < S.buildings.length; i++) {
+    var d = CAT[S.buildings[i].type];
+    if (d && d.zone === k) sum += d.cells * CFG.cellArea;
+  }
+  return sum;
+}
+function findBuilding(id) {
+  for (var i = 0; i < S.buildings.length; i++) if (S.buildings[i].id === id) return S.buildings[i];
+  return null;
+}
+function removeBuilding(id) {
+  for (var i = 0; i < S.buildings.length; i++) {
+    if (S.buildings[i].id === id) { S.buildings.splice(i, 1); break; }
+  }
+  if (S.selected === id) S.selected = null;
+}
+
+function snapshot() { return JSON.stringify({ z: S.zones, b: S.buildings, n: S.nextId }); }
+function pushUndo() {
+  undoStack.push(snapshot());
+  if (undoStack.length > 60) undoStack.shift();
+  redoStack = [];
+  updateUndoBtns();
+}
+function applySnap(s) {
+  var o = JSON.parse(s);
+  S.zones = o.z; S.buildings = o.b; S.nextId = o.n; S.selected = null;
+  syncAll();
+}
+function doUndo() {
+  if (!undoStack.length) { toast('되돌릴 작업이 없어요.'); return; }
+  redoStack.push(snapshot()); applySnap(undoStack.pop()); updateUndoBtns(); autoSave();
+}
+function doRedo() {
+  if (!redoStack.length) { toast('다시 실행할 작업이 없어요.'); return; }
+  undoStack.push(snapshot()); applySnap(redoStack.pop()); updateUndoBtns(); autoSave();
+}
+function updateUndoBtns() {
+  $('btn-undo').disabled = !undoStack.length;
+  $('btn-redo').disabled = !redoStack.length;
+}
+
+var saveTimer = null;
+function saveKey() { return SAVE_PREFIX + S.cls + '_' + S.no; }
+function autoSave() {
+  if (!S.no) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function () {
+    try {
+      localStorage.setItem(saveKey(), JSON.stringify({
+        t: Date.now(), step: S.step, cls: S.cls, no: S.no, nick: S.nick, village: S.village,
+        ratio: S.ratio, areas: S.areas, step1ok: S.step1ok, zones: zonesString(),
+        buildings: S.buildings, nextId: S.nextId, reflection: S.reflection, submittedAt: S.submittedAt
+      }));
+    } catch (e) { }
+  }, 700);
+}
+function loadSaved(cls, no) {
+  try {
+    var raw = localStorage.getItem(SAVE_PREFIX + cls + '_' + no);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function initStart() {
+  var sel = $('in-class');
+  CFG.classes.forEach(function (c, i) {
+    var o = document.createElement('option');
+    o.value = c; o.textContent = c; if (i === 0) o.selected = true;
+    sel.appendChild(o);
+  });
+  var selNo = $('in-no');
+  var o0 = document.createElement('option');
+  o0.value = ''; o0.textContent = '선택';
+  selNo.appendChild(o0);
+  for (var i = 1; i <= CFG.maxStudentNo; i++) {
+    var o = document.createElement('option');
+    o.value = i; o.textContent = i + '번';
+    selNo.appendChild(o);
+  }
+  function checkRestore() {
+    var cls = $('in-class').value, no = $('in-no').value, box = $('restore-box');
+    if (!no) { box.classList.add('hidden'); return; }
+    var sv = loadSaved(cls, no);
+    if (sv) {
+      $('restore-text').textContent = '저장된 작업이 있어요! (' + (sv.village || '이름 없음') + ' / ' +
+        new Date(sv.t).toLocaleString('ko-KR') + ')';
+      box.classList.remove('hidden');
+      box._data = sv;
+      if (!$('in-nick').value) $('in-nick').value = sv.nick || '';
+      if (!$('in-village').value) $('in-village').value = sv.village || '';
+    } else box.classList.add('hidden');
+  }
+  $('in-no').addEventListener('change', checkRestore);
+  $('in-class').addEventListener('change', checkRestore);
+
+  $('btn-restore').onclick = function () {
+    var sv = $('restore-box')._data; if (!sv) return;
+    S.cls = sv.cls; S.no = sv.no; S.nick = sv.nick; S.village = sv.village;
+    S.ratio = sv.ratio || [null, null, null, null];
+    S.areas = sv.areas || [null, null, null, null];
+    S.step1ok = !!sv.step1ok;
+    S.zones = (sv.zones && sv.zones.length === 100) ? sv.zones.split('') : S.zones;
+    S.buildings = sv.buildings || [];
+    S.nextId = sv.nextId || (S.buildings.length + 1);
+    S.reflection = sv.reflection || S.reflection;
+    S.submittedAt = sv.submittedAt || '';
+    enterMain(sv.step || (S.step1ok ? 2 : 1));
+    toast('저장된 마을을 불러왔어요!', 'good');
+  };
+  $('btn-fresh').onclick = function () {
+    localStorage.removeItem(SAVE_PREFIX + $('in-class').value + '_' + $('in-no').value);
+    $('restore-box').classList.add('hidden');
+    toast('새로 시작합니다.');
+  };
+  $('btn-start').onclick = function () {
+    var no = parseInt($('in-no').value, 10);
+    var nick = $('in-nick').value.trim(), vil = $('in-village').value.trim();
+    if (!no) { toast('학생 번호를 골라 주세요.', 'bad'); return; }
+    if (!nick) { toast('별명(이름)을 적어 주세요.', 'bad'); return; }
+    if (!vil) { toast('우리 마을 이름을 적어 주세요.', 'bad'); return; }
+    S.cls = $('in-class').value; S.no = no; S.nick = nick; S.village = vil;
+    enterMain(1);
+  };
+  $('btn-teacher-open').onclick = Teacher.open;
+  $('btn-teacher-open2').onclick = Teacher.open;
+}
+
+function enterMain(step) {
+  showScreen('screen-main');
+  $('who').textContent = S.cls + ' ' + S.no + '번 ' + S.nick + ' · ' + S.village;
+  buildStep1Table(); buildZoneButtons(); buildBuildingCards();
+  if (!R3) {
+    $('loading').classList.remove('hidden');
+    $('loading-text').textContent = '마을 지도를 준비하고 있어요...';
+    Render.createRenderer($('map3d'), function (r) {
+      R3 = r;
+      $('renderer-badge').textContent = (r.kind === '3D')
+        ? '3D 모드 (오른쪽 드래그 = 돌리기, 휠 = 확대)'
+        : '2.5D 모드 (드래그 = 이동, 휠 = 확대)';
+      R3.on('hover', function (rr, cc, bid) { hoverCell = (rr < 0) ? null : { r: rr, c: cc, bid: bid }; updatePreview(); });
+      R3.on('click', function (rr, cc, bid) { onMapClick(rr, cc, bid); });
+      R3.on('paint', function (rr, cc) { onPaintCell(rr, cc); });
+      R3.on('paintend', function () { paintSession = false; refreshPaintStats(); autoSave(); });
+      syncAll();
+      $('loading').classList.add('hidden');
+      gotoStep(step || 1);
+    });
+  } else gotoStep(step || 1);
+}
+function syncAll() {
+  if (R3) { R3.setZones(zonesString()); R3.setBuildings(S.buildings); R3.setSelected(S.selected); }
+  refreshPaintStats(); refreshBuildStats(); refreshCards(); refreshSelInfo();
+}
+function gotoStep(n) {
+  S.step = n;
+  setPills(n);
+  $('step1card').classList.toggle('hidden', n !== 1);
+  $('panel-paint').classList.toggle('hidden', n !== 2);
+  $('panel-build').classList.toggle('hidden', n !== 3);
+  if (R3) { R3.setLeftMode(n === 2 ? 'paint' : 'orbit'); R3.setPreview([], true); R3.setSelected(null); }
+  S.tool = { mode: 'none', zone: null, type: null, rot: 0, move: false };
+  S.selected = null;
+  $('btn-move').classList.remove('btn-yellow');
+  if (n === 1) $('maphint').textContent = '활동지에서 계산한 비와 면적을 입력해 보세요.';
+  if (n === 2) $('maphint').textContent = '오른쪽에서 색을 고르고 땅을 클릭·드래그해서 칠해요!';
+  if (n === 3) $('maphint').textContent = '건물을 고르고 알맞은 색의 땅을 클릭하면 건물이 올라와요!';
+  markZoneSel(); refreshCards(); refreshPaintStats(); refreshBuildStats(); refreshSelInfo(); autoSave();
+}
+function setPills(n) {
+  var pills = document.querySelectorAll('.step-pill');
+  for (var i = 0; i < pills.length; i++) {
+    var sv = parseInt(pills[i].getAttribute('data-step'), 10);
+    pills[i].className = 'step-pill' + (sv === n ? ' on' : (sv < n ? ' done' : ''));
+  }
+}
+
+function buildStep1Table() {
+  var tb = $('s1body');
+  if (tb.childElementCount) { fillStep1Inputs(); return; }
+  var html = '';
+  for (var i = 0; i < 4; i++) {
+    var z = CFG.zones[i];
+    html += '<tr><td><span class="zchip"><i class="zdot" style="background:' + z.color + '"></i>' + z.name +
+      '</span></td><td><input id="s1r' + i + '" type="number" min="1" step="1" placeholder="비"></td>' +
+      '<td><input id="s1a' + i + '" type="number" min="0" step="1000" placeholder="㎡"></td></tr>';
+  }
+  tb.innerHTML = html;
+  for (var j = 0; j < 4; j++) {
+    $('s1r' + j).addEventListener('input', onStep1Input);
+    $('s1a' + j).addEventListener('input', onStep1Input);
+  }
+  fillStep1Inputs();
+  $('btn-check1').onclick = checkStep1;
+  $('btn-go2').onclick = function () {
+    if (!S.step1ok) return;
+    gotoStep(2); toast('이제 땅을 색칠해 봐요!', 'good');
+  };
+}
+function fillStep1Inputs() {
+  for (var i = 0; i < 4; i++) {
+    if (S.ratio[i] !== null && S.ratio[i] !== undefined) $('s1r' + i).value = S.ratio[i];
+    if (S.areas[i] !== null && S.areas[i] !== undefined) $('s1a' + i).value = S.areas[i];
+  }
+  var wasOk = S.step1ok;
+  onStep1Input();
+  if (wasOk) { S.step1ok = true; $('btn-go2').disabled = false; }
+}
+function onStep1Input() {
+  var rs = 0, as = 0, txt = [];
+  for (var i = 0; i < 4; i++) {
+    var rv = parseInt($('s1r' + i).value, 10), av = parseInt($('s1a' + i).value, 10);
+    if (!isNaN(rv)) rs += rv;
+    if (!isNaN(av)) as += av;
+    txt.push(isNaN(rv) ? '?' : rv);
+  }
+  $('s1rsum').textContent = rs;
+  $('s1asum').textContent = nf(as) + '㎡';
+  $('s1ratiotext').textContent = txt.join(' : ');
+  S.step1ok = false;
+  $('btn-go2').disabled = true;
+}
+function checkStep1() {
+  var ratio = [], areas = [], i, msgs = [];
+  for (i = 0; i < 4; i++) {
+    ratio.push(parseInt($('s1r' + i).value, 10));
+    areas.push(parseInt($('s1a' + i).value, 10));
+  }
+  for (i = 0; i < 4; i++) {
+    if (isNaN(ratio[i]) || ratio[i] < 1) { msgs.push('• 네 비는 모두 1보다 크거나 같은 <b>자연수</b>로 적어야 해요.'); break; }
+  }
+  var rsum = ratio[0] + ratio[1] + ratio[2] + ratio[3];
+  if (!msgs.length && rsum !== CFG.ratioSum) {
+    msgs.push('• 비의 합을 다시 확인해 보세요. 지금 더한 값은 <b>' + rsum + '</b>입니다.');
+  }
+  if (!msgs.length) {
+    for (i = 0; i < 4; i++) if (isNaN(areas[i]) || areas[i] <= 0) { msgs.push('• 네 시설의 면적을 모두 적어 주세요.'); break; }
+  }
+  if (!msgs.length) {
+    for (i = 0; i < 4; i++) if (areas[i] % CFG.cellArea !== 0) { msgs.push('• 면적은 <b>1,000㎡ 단위</b>여야 해요. (한 칸이 1,000㎡예요)'); break; }
+  }
+  var asum = areas[0] + areas[1] + areas[2] + areas[3];
+  if (!msgs.length && asum !== CFG.totalArea) {
+    msgs.push('• 네 시설의 면적을 모두 더하면 얼마인가요? 지금은 <b>' + nf(asum) + '㎡</b>입니다.');
+  }
+  if (!msgs.length) {
+    var wrong = [];
+    for (i = 0; i < 4; i++) if (areas[i] !== CFG.totalArea * ratio[i] / CFG.ratioSum) wrong.push(CFG.zones[i].name);
+    if (wrong.length) {
+      msgs.push('• 전체 넓이에 그 시설의 비가 차지하는 <b>몫</b>을 곱해 보세요.');
+      msgs.push('&nbsp;&nbsp;다시 확인할 시설: <b>' + wrong.join(', ') + '</b>');
+    }
+  }
+  var box = $('s1msg');
+  if (msgs.length) {
+    box.className = 's1msg bad';
+    box.innerHTML = '<b>조금만 더 생각해 봐요!</b><br>' + msgs.join('<br>');
+    S.step1ok = false; $('btn-go2').disabled = true;
+    return;
+  }
+  var changed = false;
+  for (i = 0; i < 4; i++) if (S.areas[i] !== areas[i]) changed = true;
+  var painted = zoneCount('C') + zoneCount('R') + zoneCount('N') + zoneCount('E');
+  if (changed && painted > 0) {
+    confirmBox('부지를 다시 만들까요?',
+      '비례배분 결과가 바뀌었어요. 이미 칠한 땅과 지은 건물을 모두 지우고 다시 시작해야 합니다. 계속할까요?',
+      function () {
+        S.ratio = ratio; S.areas = areas;
+        S.zones = []; for (var q = 0; q < 100; q++) S.zones.push('.');
+        S.buildings = []; S.nextId = 1; undoStack = []; redoStack = []; updateUndoBtns();
+        finishStep1();
+      });
+    return;
+  }
+  S.ratio = ratio; S.areas = areas;
+  finishStep1();
+}
+function finishStep1() {
+  S.step1ok = true;
+  var box = $('s1msg');
+  box.className = 's1msg good';
+  box.innerHTML = '<b>정확해요! 비례배분을 잘 했어요 👏</b><br>이제 아래 버튼을 눌러 마을 부지를 만들어 봅시다.';
+  $('btn-go2').disabled = false;
+  syncAll(); autoSave();
+}
+
+function buildZoneButtons() {
+  var box = $('zonebtns');
+  if (box.childElementCount) { refreshPaintStats(); return; }
+  var html = '';
+  for (var i = 0; i < 4; i++) {
+    var z = CFG.zones[i];
+    html += '<div class="zbtn" data-zone="' + z.key + '" style="background:' + z.color + '">' + z.name +
+      '<small id="zb' + z.key + '">0 / 0칸</small></div>';
+  }
+  box.innerHTML = html;
+  var btns = box.querySelectorAll('.zbtn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].onclick = function () {
+      S.tool.mode = 'paint'; S.tool.zone = this.getAttribute('data-zone');
+      markZoneSel();
+      $('maphint').textContent = ZMAP[S.tool.zone].name + ' 색을 골랐어요! 땅을 클릭·드래그해 보세요.';
+    };
+  }
+  $('btn-eraser').onclick = function () {
+    S.tool.mode = 'erase'; S.tool.zone = null; markZoneSel();
+    $('maphint').textContent = '지우개예요. 지우고 싶은 칸을 클릭하세요.';
+  };
+  $('btn-paint-done').onclick = finishPaint;
+  $('btn-paint-clear').onclick = function () {
+    confirmBox('전체 지우기', '칠한 땅과 지은 건물이 모두 사라져요. 계속할까요?', function () {
+      pushUndo();
+      S.zones = []; for (var q = 0; q < 100; q++) S.zones.push('.');
+      S.buildings = []; S.selected = null;
+      syncAll(); autoSave();
+    });
+  };
+  markZoneSel();
+}
+function markZoneSel() {
+  var btns = $('zonebtns').querySelectorAll('.zbtn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('sel', S.tool.mode === 'paint' && btns[i].getAttribute('data-zone') === S.tool.zone);
+  }
+  $('btn-eraser').classList.toggle('btn-red', S.tool.mode === 'erase');
+}
+function buildingAtCell(idx) { return occupancy(null)[idx] || null; }
+function onPaintCell(r, c) {
+  if (S.step !== 2) return;
+  var idx = r * 10 + c;
+  if (S.tool.mode !== 'paint' && S.tool.mode !== 'erase') {
+    $('paintmsg').className = 'pmsg bad';
+    $('paintmsg').textContent = '먼저 오른쪽에서 색을 골라 주세요!';
+    return;
+  }
+  if (!paintSession) { pushUndo(); paintSession = true; }
+  if (S.tool.mode === 'erase') eraseCell(idx); else paintCell(idx, S.tool.zone);
+  if (R3) R3.setZones(zonesString());
+  refreshPaintStats();
+}
+function paintCell(idx, k) {
+  if (!k || S.zones[idx] === k) return;
+  var bid = buildingAtCell(idx);
+  if (bid) {
+    var b = findBuilding(bid);
+    confirmBox('건물을 철거할까요?',
+      '이 칸에는 ' + (b ? CAT[b.type].name : '건물') + '이(가) 있어요. 땅 색을 바꾸려면 건물을 철거해야 합니다. 철거할까요?',
+      function () { pushUndo(); removeBuilding(bid); S.zones[idx] = k; syncAll(); autoSave(); });
+    return;
+  }
+  var lim = limitCells(k);
+  if (zoneCount(k) >= lim) {
+    $('paintmsg').className = 'pmsg bad';
+    $('paintmsg').textContent = ZMAP[k].name + '은(는) ' + lim + '칸까지 사용할 수 있습니다!';
+    return;
+  }
+  S.zones[idx] = k;
+  $('paintmsg').className = 'pmsg';
+  $('paintmsg').textContent = '';
+}
+function eraseCell(idx) {
+  if (S.zones[idx] === '.') return;
+  var bid = buildingAtCell(idx);
+  if (bid) {
+    var b = findBuilding(bid);
+    confirmBox('건물을 철거할까요?',
+      '이 칸에는 ' + (b ? CAT[b.type].name : '건물') + '이(가) 있어요. 철거하고 땅을 지울까요?',
+      function () { pushUndo(); removeBuilding(bid); S.zones[idx] = '.'; syncAll(); autoSave(); });
+    return;
+  }
+  S.zones[idx] = '.';
+}
+function refreshPaintStats() {
+  var box = $('paintstats'); if (!box) return;
+  var html = '', total = 0, allOk = true;
+  for (var i = 0; i < 4; i++) {
+    var z = CFG.zones[i], lim = limitCells(z.key), cnt = zoneCount(z.key);
+    total += cnt;
+    if (cnt !== lim) allOk = false;
+    var pct = lim ? Math.min(100, cnt / lim * 100) : 0;
+    html += '<div class="statrow' + (lim && cnt === lim ? ' srow-full' : '') + '">' +
+      '<div class="srhead"><span><i class="zdot" style="background:' + z.color + '"></i> ' + z.name +
+      '</span><span>' + cnt + ' / ' + lim + '칸</span></div>' +
+      '<div class="bar"><i style="width:' + pct + '%;background:' + z.color + '"></i></div>' +
+      '<div class="srsub">' + nf(cnt * CFG.cellArea) + '㎡ / ' + nf(lim * CFG.cellArea) + '㎡</div></div>';
+    var zb = $('zb' + z.key);
+    if (zb) zb.textContent = cnt + ' / ' + lim + '칸';
+  }
+  html += '<div class="statrow"><div class="srhead"><span>전체</span><span>' + total + ' / 100칸</span></div></div>';
+  box.innerHTML = html;
+  $('btn-paint-done').disabled = !(allOk && total === 100);
+  if (allOk && total === 100) {
+    $('paintmsg').className = 'pmsg good';
+    $('paintmsg').textContent = '모든 구획을 정확히 나누었어요! 색칠 완료를 눌러 주세요.';
+  }
+}
+function finishPaint() {
+  var total = 0, allOk = true;
+  for (var i = 0; i < 4; i++) {
+    var k = ZK[i];
+    total += zoneCount(k);
+    if (zoneCount(k) !== limitCells(k)) allOk = false;
+  }
+  if (!allOk || total !== 100) {
+    $('paintmsg').className = 'pmsg bad';
+    $('paintmsg').textContent = '아직 칸 수가 비례배분 결과와 달라요. 현황을 확인해 보세요!';
+    return;
+  }
+  gotoStep(3);
+  toast('부지 구획 완성! 이제 건물을 지어 봐요 🏗️', 'good');
+}
+
+function buildBuildingCards() {
+  var box = $('buildlist');
+  if (box.childElementCount) { refreshCards(); return; }
+  var html = '';
+  for (var zi = 0; zi < 4; zi++) {
+    var z = CFG.zones[zi];
+    html += '<div class="zgroup" style="background:' + z.color + '">' + z.name + '</div><div class="cards">';
+    for (var i = 0; i < CFG.catalog.length; i++) {
+      var d = CFG.catalog[i];
+      if (d.zone !== z.key) continue;
+      html += '<div class="bcard" data-type="' + d.key + '"><canvas data-thumb="' + d.key + '"></canvas>' +
+        '<div class="bn">' + d.name + '</div><div class="ba">' + nf(d.cells * CFG.cellArea) + '㎡ · ' + d.cells + '칸</div></div>';
+    }
+    html += '</div>';
+  }
+  box.innerHTML = html;
+  var cvs = box.querySelectorAll('canvas[data-thumb]');
+  setTimeout(function () {
+    for (var i = 0; i < cvs.length; i++) Render.drawThumb(cvs[i], cvs[i].getAttribute('data-thumb'));
+  }, 40);
+  var cards = box.querySelectorAll('.bcard');
+  for (var j = 0; j < cards.length; j++) {
+    cards[j].onclick = function () {
+      var d = CAT[this.getAttribute('data-type')];
+      if (this.classList.contains('off')) {
+        toast(ZMAP[d.zone].name + ' 땅에 빈 자리가 ' + d.cells + '칸 필요해요!', 'bad');
+        return;
+      }
+      S.tool.mode = 'build'; S.tool.type = d.key; S.tool.rot = 0; S.tool.move = false;
+      S.selected = null;
+      if (R3) R3.setSelected(null);
+      $('btn-move').classList.remove('btn-yellow');
+      refreshCards(); refreshSelInfo();
+    };
+  }
+  var tabs = document.querySelectorAll('.stab');
+  for (var t = 0; t < tabs.length; t++) {
+    tabs[t].onclick = function () {
+      var name = this.getAttribute('data-tab'), all = document.querySelectorAll('.stab');
+      for (var q = 0; q < all.length; q++) all[q].classList.toggle('active', all[q] === this);
+      $('tab-list').classList.toggle('hidden', name !== 'list');
+      $('tab-status').classList.toggle('hidden', name !== 'status');
+    };
+  }
+  $('btn-back2').onclick = function () {
+    confirmBox('땅 색칠로 돌아갈까요?', '색을 바꾸려는 칸에 건물이 있으면 그 건물은 철거해야 해요. 돌아갈까요?',
+      function () { gotoStep(2); });
+  };
+  $('btn-finish').onclick = openReflect;
+}
+function freeCellsFor(zoneKey) {
+  var occ = occupancy(null), n = 0;
+  for (var i = 0; i < 100; i++) if (S.zones[i] === zoneKey && !occ[i]) n++;
+  return n;
+}
+function refreshCards() {
+  var cards = document.querySelectorAll('.bcard');
+  for (var i = 0; i < cards.length; i++) {
+    var d = CAT[cards[i].getAttribute('data-type')];
+    cards[i].classList.toggle('off', freeCellsFor(d.zone) < d.cells);
+    cards[i].classList.toggle('sel', S.tool.mode === 'build' && S.tool.type === d.key);
+  }
+}
+function refreshSelInfo() {
+  var box = $('selinfo'); if (!box) return;
+  if (S.selected) {
+    var b = findBuilding(S.selected);
+    if (b) {
+      var d = CAT[b.type];
+      box.innerHTML = '선택한 건물: <b>' + d.name + '</b> (' + nf(d.cells * CFG.cellArea) + '㎡ · ' + d.cells + '칸)<br>' +
+        '<small>회전(R) · 이동 · 삭제 버튼을 쓸 수 있어요.</small>';
+      return;
+    }
+  }
+  if (S.tool.mode === 'build' && S.tool.type) {
+    var dd = CAT[S.tool.type], fs = Render.footprintSize(dd, S.tool.rot);
+    box.innerHTML = '지을 건물: <b>' + dd.name + '</b> (' + nf(dd.cells * CFG.cellArea) + '㎡ · ' + dd.cells + '칸)<br>' +
+      '<small>모양 ' + fs.h + '×' + fs.w + ' · R키로 회전 · ' + ZMAP[dd.zone].name + ' 땅을 클릭!</small>';
+    return;
+  }
+  box.textContent = '건물을 골라 주세요. (건물을 클릭하면 선택·이동·삭제할 수 있어요)';
+}
+function updatePreview() {
+  if (!R3) return;
+  if (S.step !== 3 || !hoverCell) { R3.setPreview([], true); return; }
+  if (S.tool.move && S.selected) {
+    var b = findBuilding(S.selected);
+    if (b) {
+      var res = canPlace(b.type, hoverCell.r, hoverCell.c, b.rot, b.id);
+      R3.setPreview(res.cells || [], res.ok);
+      return;
+    }
+  }
+  if (S.tool.mode !== 'build' || !S.tool.type) { R3.setPreview([], true); return; }
+  var r2 = canPlace(S.tool.type, hoverCell.r, hoverCell.c, S.tool.rot, null);
+  R3.setPreview(r2.cells || [], r2.ok);
+}
+function onMapClick(r, c, bid) {
+  if (S.step !== 3) return;
+  if (S.tool.move && S.selected) {
+    var b = findBuilding(S.selected);
+    if (b) {
+      var res = canPlace(b.type, r, c, b.rot, b.id);
+      if (!res.ok) { toast(res.reason, 'bad'); return; }
+      pushUndo();
+      b.r = r; b.c = c; S.tool.move = false;
+      $('btn-move').classList.remove('btn-yellow');
+      syncAll(); autoSave();
+      toast(CAT[b.type].name + '을(를) 옮겼어요!', 'good');
+      return;
+    }
+  }
+  if (bid && S.tool.mode !== 'build') {
+    S.selected = bid; R3.setSelected(bid); refreshSelInfo(); return;
+  }
+  if (S.tool.mode === 'build' && S.tool.type) {
+    var rr = canPlace(S.tool.type, r, c, S.tool.rot, null);
+    if (!rr.ok) { toast(rr.reason, 'bad'); return; }
+    pushUndo();
+    var nb = { id: S.nextId++, type: S.tool.type, r: r, c: c, rot: S.tool.rot };
+    S.buildings.push(nb);
+    syncAll(); autoSave();
+    toast(CAT[nb.type].name + ' 완성! 🏗️', 'good');
+    return;
+  }
+  S.selected = bid || null;
+  R3.setSelected(S.selected);
+  refreshSelInfo();
+}
+function refreshBuildStats() {
+  var box = $('buildstats'); if (!box) return;
+  var html = '';
+  for (var i = 0; i < 4; i++) {
+    var z = CFG.zones[i], total = S.areas[i] || 0, built = builtArea(z.key);
+    var pct = total ? (built / total * 100) : 0;
+    html += '<div class="statrow"><div class="srhead"><span><i class="zdot" style="background:' + z.color +
+      '"></i> ' + z.name + '</span><span>' + Math.round(pct) + '%</span></div>' +
+      '<div class="bar"><i style="width:' + pct + '%;background:' + z.color + '"></i></div>' +
+      '<div class="srsub">전체 ' + nf(total) + '㎡ / 건물 ' + nf(built) + '㎡ / 남은 부지 ' + nf(total - built) + '㎡</div></div>';
+  }
+  box.innerHTML = html;
+  var inv = {}, order = [];
+  for (var j = 0; j < S.buildings.length; j++) {
+    var d = CAT[S.buildings[j].type]; if (!d) continue;
+    if (!inv[d.name]) { inv[d.name] = 0; order.push(d.name); }
+    inv[d.name]++;
+  }
+  var ih = order.length ? '' : '<span class="srsub">아직 지은 건물이 없어요.</span>';
+  for (var q = 0; q < order.length; q++) ih += '<span class="invchip">' + esc(order[q]) + ' ' + inv[order[q]] + '개</span>';
+  $('inventory').innerHTML = ih;
+}
+
+function rotateCurrent() {
+  if (S.selected) {
+    var b = findBuilding(S.selected);
+    if (b) {
+      var nr = (b.rot + 1) % 4;
+      var res = canPlace(b.type, b.r, b.c, nr, b.id);
+      if (!res.ok) { toast('그 자리에서는 회전할 수 없어요. (' + res.reason + ')', 'bad'); return; }
+      pushUndo(); b.rot = nr; syncAll(); autoSave();
+      return;
+    }
+  }
+  if (S.tool.mode === 'build') {
+    S.tool.rot = (S.tool.rot + 1) % 4;
+    refreshSelInfo(); updatePreview();
+    toast('건물 모양을 돌렸어요!');
+  }
+}
+function manualSave() {
+  autoSave();
+  setTimeout(function () { toast('마을이 이 컴퓨터에 저장되었어요! 💾', 'good'); }, 60);
+}
+function initBottom() {
+  $('btn-undo').onclick = doUndo;
+  $('btn-redo').onclick = doRedo;
+  $('btn-rotate').onclick = rotateCurrent;
+  $('btn-move').onclick = function () {
+    if (!S.selected) { toast('먼저 옮길 건물을 클릭해 주세요.', 'bad'); return; }
+    S.tool.move = !S.tool.move; S.tool.mode = 'none';
+    this.classList.toggle('btn-yellow', S.tool.move);
+    toast(S.tool.move ? '옮길 위치를 클릭하세요!' : '이동을 취소했어요.');
+    refreshCards();
+  };
+  $('btn-del').onclick = function () {
+    if (!S.selected) { toast('먼저 삭제할 건물을 클릭해 주세요.', 'bad'); return; }
+    var b = findBuilding(S.selected);
+    pushUndo(); removeBuilding(S.selected); syncAll(); autoSave();
+    toast((b ? CAT[b.type].name : '건물') + '을(를) 철거했어요.', 'good');
+  };
+  $('btn-camreset').onclick = function () { if (R3) R3.resetCamera(); };
+  $('btn-save').onclick = manualSave;
+  $('btn-save-top').onclick = manualSave;
+  $('btn-submit').onclick = trySubmit;
+  $('btn-submit-top').onclick = trySubmit;
+  $('btn-submit-done').onclick = trySubmit;
+  $('cam-rotl').onclick = function () { if (R3) R3.rotateView(-1); };
+  $('cam-rotr').onclick = function () { if (R3) R3.rotateView(1); };
+  $('cam-in').onclick = function () { if (R3) R3.zoomBy(0.85); };
+  $('cam-out').onclick = function () { if (R3) R3.zoomBy(1.18); };
+  $('cam-fit').onclick = function () { if (R3) R3.fitAll(); };
+  $('cam-reset').onclick = function () { if (R3) R3.resetCamera(); };
+  $('btn-done-back').onclick = function () { showScreen('screen-main'); if (R3) R3.resize(); };
+  $('btn-shot').onclick = saveShot;
+  document.addEventListener('keydown', function (e) {
+    if (/input|textarea|select/i.test(e.target.tagName || '')) return;
+    if (e.key === 'r' || e.key === 'R') rotateCurrent();
+    else if (e.key === 'Delete') { if (S.selected) $('btn-del').click(); }
+    else if (e.key === 'Escape') {
+      S.tool = { mode: 'none', zone: null, type: null, rot: 0, move: false };
+      S.selected = null;
+      if (R3) { R3.setSelected(null); R3.setPreview([], true); }
+      markZoneSel(); refreshCards(); refreshSelInfo();
+    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) { doUndo(); e.preventDefault(); }
+    else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) { doRedo(); e.preventDefault(); }
+  });
+  var closers = document.querySelectorAll('.modal-close');
+  for (var i = 0; i < closers.length; i++) closers[i].onclick = closeModal;
+}
+
+function openReflect() {
+  var auto = '<b>우리 마을 비:</b> 상업 : 주거 : 근린 : 교육 = ' + S.ratio.join(' : ') + '<br>';
+  for (var i = 0; i < 4; i++) auto += CFG.zones[i].name + ' <b>' + nf(S.areas[i]) + '㎡</b>' + (i < 3 ? ' · ' : '');
+  $('rf-auto').innerHTML = auto + '<br><small>※ 이미 입력한 비와 면적은 자동으로 들어가요.</small>';
+  $('rf-village').value = S.village;
+  var sel = $('rf-widest');
+  sel.innerHTML = '';
+  var maxA = Math.max.apply(null, S.areas);
+  for (var j = 0; j < 4; j++) {
+    var o = document.createElement('option');
+    o.value = CFG.zones[j].name; o.textContent = CFG.zones[j].name;
+    if (S.reflection.widestFacility ? (S.reflection.widestFacility === CFG.zones[j].name) : (S.areas[j] === maxA)) o.selected = true;
+    sel.appendChild(o);
+  }
+  $('rf-reason').value = S.reflection.widestReason || '';
+  $('rf-feature').value = S.reflection.villageFeature || '';
+  $('rf-proud').value = S.reflection.proudBuilding || '';
+  $('rf-design').value = S.reflection.designReason || '';
+  $('rf-msg').textContent = '';
+  openModal('modal-reflect');
+  $('rf-ok').onclick = function () {
+    var v = $('rf-village').value.trim();
+    if (!v) { $('rf-msg').textContent = '마을 이름을 적어 주세요.'; return; }
+    if (!$('rf-reason').value.trim() || !$('rf-feature').value.trim() || !$('rf-design').value.trim()) {
+      $('rf-msg').textContent = '3, 4, 6번 질문에 답을 적어 주세요.';
+      return;
+    }
+    S.village = v;
+    S.reflection = {
+      widestFacility: $('rf-widest').value,
+      widestReason: $('rf-reason').value.trim(),
+      villageFeature: $('rf-feature').value.trim(),
+      proudBuilding: $('rf-proud').value.trim(),
+      designReason: $('rf-design').value.trim()
+    };
+    closeModal(); autoSave(); showDone();
+  };
+}
+function reflectionDone() {
+  return !!(S.reflection.widestReason && S.reflection.villageFeature && S.reflection.designReason);
+}
+function showDone() {
+  setPills(4);
+  showScreen('screen-done');
+  $('done-village').textContent = S.village;
+  $('done-who').textContent = S.cls + ' ' + S.no + '번 ' + S.nick + ' 도시 설계가';
+  $('done-ratio').textContent = '상업 : 주거 : 근린 : 교육 = ' + S.ratio.join(' : ');
+  var h = '<tr><th>시설</th><th>비</th><th>배분 면적</th><th>건물 면적</th><th>남은 부지</th></tr>';
+  for (var i = 0; i < 4; i++) {
+    var z = CFG.zones[i], bA = builtArea(z.key);
+    h += '<tr><td><i class="zdot" style="background:' + z.color + '"></i> ' + z.name +
+      '</td><td class="num">' + S.ratio[i] + '</td><td class="num">' + nf(S.areas[i]) +
+      '㎡</td><td class="num">' + nf(bA) + '㎡</td><td class="num">' + nf(S.areas[i] - bA) + '㎡</td></tr>';
+  }
+  var tb = builtArea('C') + builtArea('R') + builtArea('N') + builtArea('E');
+  h += '<tr><th>합계</th><th class="num">' + CFG.ratioSum + '</th><th class="num">' + nf(CFG.totalArea) +
+    '㎡</th><th class="num">' + nf(tb) + '㎡</th><th></th></tr>';
+  $('done-areas').innerHTML = h;
+  var inv = {}, order = [];
+  S.buildings.forEach(function (b) {
+    var d = CAT[b.type]; if (!d) return;
+    if (!inv[d.name]) { inv[d.name] = 0; order.push(d.name); }
+    inv[d.name]++;
+  });
+  $('done-blds').innerHTML = order.length
+    ? order.map(function (n) { return '<span class="invchip">' + esc(n) + ' ' + inv[n] + '개</span>'; }).join('')
+    : '<span class="srsub">지은 건물이 없어요.</span>';
+  $('done-reflect').innerHTML =
+    '<b>가장 넓게 배분한 시설</b><p>' + esc(S.reflection.widestFacility) + '</p>' +
+    '<b>그렇게 한 이유</b><p>' + esc(S.reflection.widestReason) + '</p>' +
+    '<b>우리 마을의 특징</b><p>' + esc(S.reflection.villageFeature) + '</p>' +
+    '<b>가장 자랑하고 싶은 건물</b><p>' + esc(S.reflection.proudBuilding || '-') + '</p>' +
+    '<b>이렇게 설계한 이유</b><p>' + esc(S.reflection.designReason) + '</p>';
+  if (!RDONE) {
+    Render.createRenderer($('map-done'), function (r) {
+      RDONE = r;
+      RDONE.setLeftMode('orbit');
+      RDONE.setZones(zonesString());
+      RDONE.setBuildings(S.buildings);
+      RDONE.fitAll();
+    });
+  } else {
+    RDONE.setZones(zonesString());
+    RDONE.setBuildings(S.buildings);
+    RDONE.resize(); RDONE.fitAll();
+  }
+}
+function saveShot() {
+  var r = RDONE || R3;
+  if (!r) { toast('지도가 준비되지 않았어요.', 'bad'); return; }
+  var url;
+  try { url = r.screenshot(); } catch (e) { toast('이미지를 만들 수 없어요.', 'bad'); return; }
+  $('img-title').textContent = '🖼 ' + S.village + ' 조감도';
+  $('img-body').innerHTML = '<img src="' + url + '" alt="마을 조감도">';
+  var a = $('img-dl');
+  a.classList.remove('hidden');
+  a.href = url;
+  a.download = (S.no + '번_' + S.nick + '_' + S.village + '.png').replace(/[\\/:*?"<>|]/g, '_');
+  openModal('modal-img');
+}
+
+function validateBeforeSubmit() {
+  if (!S.step1ok) return 'STEP 1 비례배분 계산을 먼저 확인해 주세요.';
+  var total = 0;
+  for (var i = 0; i < 4; i++) {
+    var k = ZK[i];
+    if (zoneCount(k) !== limitCells(k)) return ZMAP[k].name + ' 칸 수가 비례배분 결과와 달라요.';
+    total += zoneCount(k);
+  }
+  if (total !== 100) return '색칠한 칸이 100칸이 되어야 해요.';
+  if (!reflectionDone()) return 'REFLECT';
+  return null;
+}
+function trySubmit() {
+  var err = validateBeforeSubmit();
+  if (err === 'REFLECT') { toast('먼저 마을 설계 이야기를 적어 주세요!'); openReflect(); return; }
+  if (err) { toast(err, 'bad'); return; }
+  if (S.submitting) { toast('제출하고 있어요. 잠시만 기다려 주세요!'); return; }
+  if (!S.clientKey) S.clientKey = 'ck-' + S.no + '-' + Date.now() + '-' + Math.floor(Math.random() * 100000);
+  doSubmit();
+}
+function setSubmitDisabled(v) {
+  ['btn-submit', 'btn-submit-top', 'btn-submit-done'].forEach(function (id) { $(id).disabled = v; });
+}
+function doSubmit() {
+  S.submitting = true;
+  setSubmitDisabled(true);
+  $('sb-title').textContent = '📨 제출 중...';
+  $('sb-body').className = 'modal-msg';
+  $('sb-body').textContent = '선생님께 마을 설계도를 보내고 있어요. 잠시만 기다려 주세요!';
+  $('sb-retry').classList.add('hidden');
+  $('sb-close').classList.add('hidden');
+  openModal('modal-submit');
+
+  var payload = {
+    cls: S.cls, no: S.no, nick: S.nick, village: S.village,
+    ratio: S.ratio, areas: S.areas, zones: zonesString(),
+    buildings: S.buildings.map(function (b) { return { type: b.type, r: b.r, c: b.c, rot: b.rot }; }),
+    reflection: S.reflection, clientKey: S.clientKey
+  };
+  api('submit', payload).then(function (res) {
+    S.submitting = false; setSubmitDisabled(false);
+    if (res && res.ok) {
+      $('sb-title').textContent = '🎉 제출 완료!';
+      $('sb-body').className = 'modal-msg good';
+      $('sb-body').innerHTML = '마을 설계도가 선생님에게 제출되었습니다!<br><small>제출 번호 ' +
+        esc(res.submissionId) + (res.version ? ' · ' + res.version + '번째 제출' : '') + '</small>';
+      $('sb-close').classList.remove('hidden');
+      S.submittedAt = res.updatedAt || '';
+      S.clientKey = null;
+      autoSave();
+    } else {
+      $('sb-title').textContent = '⚠️ 제출하지 못했어요';
+      $('sb-body').className = 'modal-msg';
+      $('sb-body').textContent = (res && res.message) ? res.message : '알 수 없는 문제가 생겼어요.';
+      $('sb-retry').classList.remove('hidden');
+      $('sb-close').classList.remove('hidden');
+    }
+  }).catch(function (e) {
+    S.submitting = false; setSubmitDisabled(false);
+    $('sb-title').textContent = '⚠️ 인터넷 연결을 확인해 주세요';
+    $('sb-body').className = 'modal-msg';
+    $('sb-body').textContent = '제출이 실패했습니다. 작업은 이 컴퓨터에 저장되어 있으니 다시 시도해 주세요. (' +
+      String(e && e.message ? e.message : e) + ')';
+    $('sb-retry').classList.remove('hidden');
+    $('sb-close').classList.remove('hidden');
+  });
+}
+
+/*==================== 교사 관리실 ====================*/
+var Teacher = (function () {
+  var token = null, rows = [], current = null, RT = null, expTimer = null, prevScreen = 'screen-start';
+
+  function open() {
+    var act = document.querySelector('.screen.active');
+    prevScreen = act ? act.id : 'screen-start';
+    if (token) { showDash(); return; }
+    $('t-pw').value = ''; $('t-pwmsg').textContent = '';
+    openModal('modal-login');
+    setTimeout(function () { $('t-pw').focus(); }, 60);
+  }
+  function login() {
+    var pw = $('t-pw').value;
+    if (!pw) { $('t-pwmsg').textContent = '비밀번호를 입력해 주세요.'; return; }
+    $('t-login').disabled = true;
+    $('t-pwmsg').textContent = '확인 중...';
+    api('login', { password: pw }).then(function (res) {
+      $('t-login').disabled = false;
+      if (res && res.ok) {
+        token = res.token;
+        $('t-pw').value = ''; $('t-pwmsg').textContent = '';
+        startExpiry(res.ttl || 1800);
+        closeModal(); showDash(); load();
+      } else {
+        $('t-pwmsg').textContent = (res && res.message) ? res.message : '로그인에 실패했습니다.';
+      }
+    }).catch(function (e) {
+      $('t-login').disabled = false;
+      $('t-pwmsg').textContent = '서버 오류: ' + String(e && e.message ? e.message : e);
+    });
+  }
+  function startExpiry(ttl) {
+    if (expTimer) clearInterval(expTimer);
+    var left = ttl;
+    $('t-session').textContent = '인증 유지 ' + Math.ceil(left / 60) + '분';
+    expTimer = setInterval(function () {
+      left -= 30;
+      if (left <= 0) { logout(true); return; }
+      $('t-session').textContent = '인증 유지 ' + Math.ceil(left / 60) + '분';
+    }, 30000);
+  }
+  function showDash() {
+    showScreen('screen-teacher');
+    if (!RT) {
+      Render.createRenderer($('map-teacher'), function (r) {
+        RT = r; RT.setLeftMode('orbit');
+        if (current) drawCurrent();
+      });
+    } else RT.resize();
+  }
+  function logout(expired) {
+    if (token) api('logout', { token: token }).catch(function () { });
+    token = null; rows = []; current = null;
+    if (expTimer) clearInterval(expTimer);
+    $('t-session').textContent = '';
+    showScreen(prevScreen);
+    if (expired) toast('인증 시간이 지났습니다. 다시 로그인해 주세요.', 'bad');
+  }
+  function authFail(res) {
+    if (res && res.code === 'AUTH_REQUIRED') {
+      token = null;
+      toast('교사 인증이 만료되었습니다. 다시 로그인해 주세요.', 'bad');
+      open();
+      return true;
+    }
+    return false;
+  }
+  function load() {
+    $('t-msg').textContent = '';
+    $('t-tbody').innerHTML = '<tr><td colspan="8">불러오는 중...</td></tr>';
+    api('list', { token: token }).then(function (res) {
+      if (authFail(res)) return;
+      if (!res || !res.ok) { $('t-msg').textContent = (res && res.message) || '불러오기 실패'; return; }
+      rows = res.rows || [];
+      renderTable(res.maxStudentNo || 14);
+    }).catch(function (e) {
+      $('t-msg').textContent = '서버 오류: ' + String(e && e.message ? e.message : e);
+    });
+  }
+  function renderTable(maxNo) {
+    var byNo = {};
+    rows.forEach(function (r) { byNo[r.no] = r; });
+    var tb = 0;
+    rows.forEach(function (r) { tb += (r.buildingCount || 0); });
+    $('t-summary').innerHTML =
+      '<div class="tcard"><b>' + rows.length + ' / ' + maxNo + '</b><span>제출 완료</span></div>' +
+      '<div class="tcard"><b>' + (maxNo - rows.length) + '</b><span>미제출</span></div>' +
+      '<div class="tcard"><b>' + tb + '</b><span>전체 건물 수</span></div>';
+    var html = '';
+    for (var n = 1; n <= maxNo; n++) {
+      var r = byNo[n];
+      if (r) {
+        html += '<tr data-id="' + esc(r.submissionId) + '"><td>' + n + '번</td><td>' + esc(r.nick) +
+          '</td><td>' + esc(r.village) + '</td><td>' + esc(r.ratio) + '</td><td>' + (r.buildingCount || 0) +
+          '개</td><td>' + esc(String(r.updatedAt).substring(5, 16)) + '</td><td><span class="badge badge-ok">제출 완료' +
+          (r.version > 1 ? ' (' + r.version + '차)' : '') + '</span></td>' +
+          '<td><button class="btn btn-sm btn-blue t-open">마을 열기</button></td></tr>';
+      } else {
+        html += '<tr><td>' + n + '번</td><td colspan="5" style="color:#aab7c4">아직 제출하지 않았어요</td>' +
+          '<td><span class="badge badge-no">미제출</span></td><td></td></tr>';
+      }
+    }
+    $('t-tbody').innerHTML = html;
+    var btns = $('t-tbody').querySelectorAll('.t-open');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].onclick = function () {
+        var tr = this.parentNode.parentNode, all = $('t-tbody').querySelectorAll('tr');
+        for (var q = 0; q < all.length; q++) all[q].classList.toggle('sel', all[q] === tr);
+        openOne(tr.getAttribute('data-id'));
+      };
+    }
+  }
+  function openOne(id) {
+    $('t-vhead').textContent = '불러오는 중...';
+    api('get', { token: token, submissionId: id }).then(function (res) {
+      if (authFail(res)) return;
+      if (!res || !res.ok) { $('t-vhead').textContent = (res && res.message) || '열 수 없습니다.'; return; }
+      current = res.data;
+      drawCurrent();
+    }).catch(function (e) { $('t-vhead').textContent = '오류: ' + String(e.message || e); });
+  }
+  function drawCurrent() {
+    var d = current; if (!d) return;
+    $('t-vhead').textContent = d.no + '번 ' + d.nick + ' — 「' + d.village + '」 (읽기 전용)';
+    if (RT) {
+      RT.setZones(d.zones);
+      RT.setBuildings(d.buildings.map(function (b, i) {
+        return { id: 'T' + i, type: b.type, r: b.r, c: b.c, rot: b.rot };
+      }));
+      RT.setSelected(null); RT.resize(); RT.fitAll();
+    }
+    var zn = APP_CONFIG.zones;
+    var h = '<table><tr><th>시설</th><th>비</th><th>배분 면적</th><th>색칠 칸</th><th>건물 면적</th><th>남은 부지</th></tr>';
+    for (var i = 0; i < 4; i++) {
+      h += '<tr><td>' + zn[i].name + '</td><td>' + d.ratio[i] + '</td><td>' + nf(d.areas[i]) + '㎡</td><td>' +
+        d.cells[i] + '칸</td><td>' + nf(d.built[i]) + '㎡</td><td>' + nf(d.areas[i] - d.built[i]) + '㎡</td></tr>';
+    }
+    h += '</table><b>비례배분 비:</b> ' + d.ratio.join(' : ') + '<br><b>건물:</b> ' +
+      esc(d.buildingSummary || '-') + '<br><b>처음 제출:</b> ' + esc(d.firstSubmittedAt) +
+      ' / <b>최신:</b> ' + esc(d.updatedAt) + ' (' + d.version + '차)<br><br>';
+    h += '<b>건물 배치</b><table><tr><th>건물</th><th>위치</th><th>칸</th><th>면적</th></tr>';
+    for (var j = 0; j < d.buildings.length; j++) {
+      var b = d.buildings[j], def = CAT[b.type] || { name: b.type, cells: 0 };
+      h += '<tr><td>' + esc(def.name) + '</td><td>' + (b.r + 1) + '행 ' + (b.c + 1) + '열' +
+        (b.rot % 2 ? ' (회전)' : '') + '</td><td>' + def.cells + '칸</td><td>' +
+        nf(def.cells * APP_CONFIG.cellArea) + '㎡</td></tr>';
+    }
+    h += '</table><b>설계 의도</b><br>· 가장 넓은 시설: ' + esc(d.reflection.widestFacility) +
+      '<br>· 이유: ' + esc(d.reflection.widestReason) +
+      '<br>· 마을 특징: ' + esc(d.reflection.villageFeature) +
+      '<br>· 자랑할 건물: ' + esc(d.reflection.proudBuilding) +
+      '<br>· 설계 이유: ' + esc(d.reflection.designReason) + '<br><br>';
+    h += '<button class="btn btn-sm btn-gray" id="t-hist">제출 이력 보기</button> ' +
+         '<button class="btn btn-sm btn-blue" id="t-one">이 학생 결과 저장(JSON)</button> ' +
+         '<button class="btn btn-sm btn-red" id="t-del">이 제출 삭제</button><div id="t-histbox"></div>';
+    $('t-detail').innerHTML = h;
+
+    $('t-hist').onclick = function () {
+      api('history', { token: token, cls: d.cls, no: d.no }).then(function (res) {
+        if (authFail(res)) return;
+        if (!res.ok) { $('t-histbox').textContent = res.message || '오류'; return; }
+        var hh = '<table><tr><th>시각</th><th>구분</th><th>차수</th><th>마을</th><th>비</th><th>건물</th></tr>';
+        res.rows.forEach(function (x) {
+          hh += '<tr><td>' + esc(x.savedAt) + '</td><td>' + esc(x.action) + '</td><td>' + x.version +
+            '</td><td>' + esc(x.village) + '</td><td>' + esc(x.ratio) + '</td><td>' + x.buildingCount + '</td></tr>';
+        });
+        $('t-histbox').innerHTML = hh + '</table>';
+      });
+    };
+    $('t-one').onclick = function () {
+      api('exportOne', { token: token, submissionId: d.submissionId }).then(function (res) {
+        if (authFail(res)) return;
+        if (!res.ok) { toast(res.message || '오류', 'bad'); return; }
+        if (downloadText(res.filename, res.text, 'application/json')) toast('JSON 파일을 저장했어요.', 'good');
+      });
+    };
+    $('t-del').onclick = function () {
+      confirmBox('제출 삭제', d.no + '번 ' + d.nick + ' 학생의 제출을 삭제할까요? (이력에는 남습니다)', function () {
+        api('del', { token: token, submissionId: d.submissionId }).then(function (res) {
+          if (authFail(res)) return;
+          if (!res.ok) { toast(res.message || '오류', 'bad'); return; }
+          current = null;
+          $('t-detail').innerHTML = '';
+          $('t-vhead').textContent = '삭제되었습니다.';
+          load();
+        });
+      });
+    };
+  }
+  function exportCsv() {
+    $('t-msg').textContent = 'CSV를 만들고 있어요...';
+    api('csv', { token: token }).then(function (res) {
+      if (authFail(res)) return;
+      if (!res.ok) { $('t-msg').textContent = res.message || '오류'; return; }
+      var name = '미래사상구_제출데이터.csv';
+      if (downloadText(name, '\uFEFF' + res.csv, 'text/csv;charset=utf-8')) {
+        $('t-msg').textContent = 'CSV 파일을 저장했습니다: ' + name;
+      } else {
+        $('t-msg').textContent = '다운로드가 막혔습니다. 스프레드시트에서 직접 확인해 주세요.';
+      }
+    }).catch(function (e) { $('t-msg').textContent = '오류: ' + String(e.message || e); });
+  }
+  function init() {
+    $('t-login').onclick = login;
+    $('t-pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') login(); });
+    $('t-refresh').onclick = load;
+    $('t-csv').onclick = exportCsv;
+    $('t-logout').onclick = function () { logout(false); };
+    $('tcam-rotl').onclick = function () { if (RT) RT.rotateView(-1); };
+    $('tcam-rotr').onclick = function () { if (RT) RT.rotateView(1); };
+    $('tcam-in').onclick = function () { if (RT) RT.zoomBy(0.85); };
+    $('tcam-out').onclick = function () { if (RT) RT.zoomBy(1.18); };
+    $('tcam-fit').onclick = function () { if (RT) RT.fitAll(); };
+  }
+  return { init: init, open: open, resize: function () { if (RT) RT.resize(); } };
+})();
+
+/*==================== 부팅 ====================*/
+document.addEventListener('DOMContentLoaded', function () {
+  if (!API_OK) {
+    var w = $('apiwarn');
+    w.classList.remove('hidden');
+    w.textContent = '⚠️ 서버 주소(API_URL)가 설정되지 않았습니다. 마을 만들기는 되지만 제출은 되지 않습니다.';
+  }
+  initStart();
+  initBottom();
+  Teacher.init();
+  $('sb-retry').onclick = doSubmit;
+  $('sb-close').onclick = closeModal;
+  updateUndoBtns();
+  window.addEventListener('resize', function () {
+    if (R3) R3.resize();
+    if (RDONE) RDONE.resize();
+    Teacher.resize();
+  });
+  window.addEventListener('beforeunload', autoSave);
+});
+</script>
+</body>
+</html>
